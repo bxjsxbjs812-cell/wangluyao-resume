@@ -11,19 +11,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
-    
     .a4-page {
       width: 210mm;
       min-height: 297mm;
-      height: 297mm;
       background: white;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
       margin: 0 auto;
+      box-sizing: border-box;
       position: relative;
-      overflow: hidden;
     }
 
     @media print {
@@ -37,15 +32,13 @@
       .a4-page {
         box-shadow: none;
         margin: 0;
-        width: 210mm;
-        height: 297mm;
+        width: 100%;
       }
     }
 
-    /* 强制编辑区域内文字保持全局统一字体与纯文本属性 */
+    /* 强制编辑区域内文字保持全局统一字体 */
     [contenteditable="true"] {
       font-family: inherit !important;
-      outline: none;
     }
     [contenteditable="true"] * {
       font-family: inherit !important;
@@ -75,7 +68,7 @@
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
       <div class="flex items-center gap-2">
         <i class="fa-solid fa-file-invoice text-slate-700 text-xl"></i>
-        <h1 class="text-lg font-bold text-gray-800">简历编辑器 <span class="text-xs font-normal text-gray-500">(单页 A4 完美渲染)</span></h1>
+        <h1 class="text-lg font-bold text-gray-800">简历编辑器 <span class="text-xs font-normal text-gray-500">(A4 自动优化)</span></h1>
       </div>
 
       <div class="flex items-center gap-3 flex-wrap">
@@ -99,14 +92,14 @@
 
   <main class="py-8">
     <!-- A4 简历主容器 -->
-    <div id="resume-content" class="a4-page p-10 flex flex-col justify-between">
+    <div id="resume-content" class="a4-page p-12 flex flex-col justify-between">
       
       <div>
         <!-- 头部个人信息与头像 -->
-        <div class="flex justify-between items-start mb-6">
+        <div class="flex justify-between items-start mb-8">
           <div class="flex-1">
-            <h1 class="text-3xl font-bold tracking-wide text-gray-900 mb-2.5" contenteditable="true">王璐瑶</h1>
-            <div class="grid grid-cols-2 gap-y-1.5 gap-x-6 text-[13.5px] text-gray-600 max-w-lg">
+            <h1 class="text-3xl font-bold tracking-wide text-gray-900 mb-3" contenteditable="true">王璐瑶</h1>
+            <div class="grid grid-cols-2 gap-y-2 gap-x-6 text-[14px] text-gray-600 max-w-lg">
               <div><span class="font-medium text-gray-700">性别：</span><span contenteditable="true">女</span></div>
               <div><span class="font-medium text-gray-700">年龄：</span><span contenteditable="true">21</span></div>
               <div><span class="font-medium text-gray-700">电话：</span><span contenteditable="true">15580163553</span></div>
@@ -116,7 +109,7 @@
             </div>
             
             <!-- 求职意向 -->
-            <div class="mt-3 pt-2.5 border-t border-gray-100 text-[13.5px]">
+            <div class="mt-4 pt-3 border-t border-gray-100 text-[14px]">
               <span class="font-semibold text-gray-900">求职意向：</span>
               <span class="text-gray-800 font-medium" contenteditable="true">外贸业务员 / 跨境电商实习生</span>
               <span class="ml-6 text-gray-500">求职类型：<span class="text-gray-700" contenteditable="true">实习</span></span>
@@ -124,8 +117,8 @@
           </div>
 
           <!-- 头像 -->
-          <div class="relative group ml-4 flex-shrink-0">
-            <div class="w-28 h-36 border border-gray-200 bg-gray-50 rounded overflow-hidden flex items-center justify-center shadow-sm">
+          <div class="relative group ml-6 flex-shrink-0">
+            <div class="w-32 h-40 border border-gray-200 bg-gray-50 rounded overflow-hidden flex items-center justify-center shadow-sm">
               <img id="avatarImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='1.5'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E" class="w-full h-full object-cover" alt="证件照">
             </div>
             
@@ -139,16 +132,16 @@
         </div>
 
         <!-- 教育经历 -->
-        <section class="mb-5">
-          <h2 class="section-title text-[14.5px] font-bold pb-1 mb-2 flex items-center gap-2">
+        <section class="mb-7">
+          <h2 class="section-title text-[15px] font-bold pb-1.5 mb-3 flex items-center gap-2">
             <i class="fa-solid fa-graduation-cap text-sm"></i> 教育经历
           </h2>
-          <div class="flex justify-between items-center text-[13.5px] font-semibold text-gray-800">
-            <span contenteditable="true">吉首大学张家界学院</span>
-            <span contenteditable="true" class="font-normal text-gray-700">英语 | 本科 (全日制)</span>
-            <span contenteditable="true" class="text-gray-500 font-normal">2023.09 - 2027.06</span>
+          <div class="relative flex justify-between items-center text-[14px] font-semibold text-gray-800">
+            <span contenteditable="true" class="z-10">吉首大学张家界学院</span>
+            <span contenteditable="true" class="absolute inset-x-0 text-center font-normal text-gray-700 pointer-events-auto">英语 | 本科 (全日制)</span>
+            <span contenteditable="true" class="z-10 text-gray-500 font-normal">2023.09 - 2027.06</span>
           </div>
-          <ul class="list-disc list-inside text-[12.5px] text-gray-700 mt-1.5 space-y-1 leading-relaxed">
+          <ul class="list-disc list-inside text-[13px] text-gray-700 mt-2 space-y-1.5 leading-relaxed">
             <li contenteditable="true">专业成绩排名年级前 15%，在校期间连续 2 年获得校级奖学金。</li>
             <li contenteditable="true">主修英语核心专业课程，夯实听说读写译综合语言能力。</li>
             <li contenteditable="true">在校期间考取英语专业四级、大学英语四级、大学英语六级证书。</li>
@@ -156,16 +149,16 @@
         </section>
 
         <!-- 项目经历 -->
-        <section class="mb-5">
-          <h2 class="section-title text-[14.5px] font-bold pb-1 mb-2 flex items-center gap-2">
+        <section class="mb-7">
+          <h2 class="section-title text-[15px] font-bold pb-1.5 mb-3 flex items-center gap-2">
             <i class="fa-solid fa-briefcase text-sm"></i> 项目经历
           </h2>
-          <div class="flex justify-between items-center text-[13.5px] font-semibold text-gray-800">
-            <span contenteditable="true">WorkBuddy 创业黑客松实训营</span>
-            <span contenteditable="true" class="font-normal text-gray-700">FiveSpark 团队成员</span>
-            <span contenteditable="true" class="text-gray-500 font-normal">2026.07</span>
+          <div class="relative flex justify-between items-center text-[14px] font-semibold text-gray-800">
+            <span contenteditable="true" class="z-10">WorkBuddy 创业黑客松实训营</span>
+            <span contenteditable="true" class="absolute inset-x-0 text-center font-normal text-gray-700 text-[13px] pointer-events-auto">FiveSpark 团队成员</span>
+            <span contenteditable="true" class="z-10 text-gray-500 font-normal text-[13px]">2026.07</span>
           </div>
-          <ul class="list-disc list-inside text-[12.5px] text-gray-700 mt-1.5 space-y-1 leading-relaxed">
+          <ul class="list-disc list-inside text-[13px] text-gray-700 mt-2 space-y-1.5 leading-relaxed">
             <li contenteditable="true">参与跨境电商完整业务全流程实训，完成产品选品、海外市场分析、客户开发、询盘回复、报价谈判与模拟订单成交全环节实操。</li>
             <li contenteditable="true">团队整体积分排名第五，斩获“铜牌团队”荣誉，个人参与项目获评实训营“最佳案例奖”。</li>
             <li contenteditable="true">熟练掌握外贸客户英文沟通、报价定价策略、订单跟进转化的基础业务方法。</li>
@@ -173,42 +166,42 @@
         </section>
 
         <!-- 在校经历 -->
-        <section class="mb-5">
-          <h2 class="section-title text-[14.5px] font-bold pb-1 mb-2 flex items-center gap-2">
+        <section class="mb-7">
+          <h2 class="section-title text-[15px] font-bold pb-1.5 mb-3 flex items-center gap-2">
             <i class="fa-solid fa-users text-sm"></i> 在校经历
           </h2>
-          <div class="space-y-3 text-[12.5px]">
+          <div class="space-y-4 text-[13px]">
             <div>
-              <div class="flex justify-between items-center font-semibold text-gray-800 text-[13.5px]">
-                <span contenteditable="true">张家界武陵源马拉松</span>
-                <span contenteditable="true" class="font-normal text-gray-700">赛事志愿者</span>
-                <span contenteditable="true" class="text-gray-500 font-normal">2024.04</span>
+              <div class="relative flex justify-between items-center font-semibold text-gray-800 text-[14px]">
+                <span contenteditable="true" class="z-10">张家界武陵源马拉松</span>
+                <span contenteditable="true" class="absolute inset-x-0 text-center font-normal text-gray-700 text-[13px] pointer-events-auto">赛事志愿者</span>
+                <span contenteditable="true" class="z-10 text-gray-500 font-normal text-[13px]">2024.04</span>
               </div>
-              <ul class="list-disc list-inside text-gray-700 mt-1 space-y-0.5 leading-relaxed">
+              <ul class="list-disc list-inside text-gray-700 mt-1.5 space-y-1 leading-relaxed">
                 <li contenteditable="true">对接千余名参赛选手，负责路线指引、物资分拣派发、现场秩序维护工作。</li>
                 <li contenteditable="true">全程零失误保障赛事正常落地，获评优秀志愿者并获得官方认证证书。</li>
               </ul>
             </div>
 
             <div>
-              <div class="flex justify-between items-center font-semibold text-gray-800 text-[13.5px]">
-                <span contenteditable="true">社区志愿服务</span>
-                <span contenteditable="true" class="font-normal text-gray-700">志愿者</span>
-                <span contenteditable="true" class="text-gray-500 font-normal">2024.01 - 2024.02</span>
+              <div class="relative flex justify-between items-center font-semibold text-gray-800 text-[14px]">
+                <span contenteditable="true" class="z-10">社区志愿服务</span>
+                <span contenteditable="true" class="absolute inset-x-0 text-center font-normal text-gray-700 text-[13px] pointer-events-auto">志愿者</span>
+                <span contenteditable="true" class="z-10 text-gray-500 font-normal text-[13px]">2024.01 - 2024.02</span>
               </div>
-              <ul class="list-disc list-inside text-gray-700 mt-1 space-y-0.5 leading-relaxed">
+              <ul class="list-disc list-inside text-gray-700 mt-1.5 space-y-1 leading-relaxed">
                 <li contenteditable="true">日均接待 50+ 人次居民咨询，完成 100 余份居民档案资料规整归档。</li>
                 <li contenteditable="true">梳理输出标准化办公会务文档，整体办公事务处理效率提升 50%。</li>
               </ul>
             </div>
 
             <div>
-              <div class="flex justify-between items-center font-semibold text-gray-800 text-[13.5px]">
-                <span contenteditable="true">朋辈心理互助会</span>
-                <span contenteditable="true" class="font-normal text-gray-700">干事 (文宣部)</span>
-                <span contenteditable="true" class="text-gray-500 font-normal">2023.10 - 2024.09</span>
+              <div class="relative flex justify-between items-center font-semibold text-gray-800 text-[14px]">
+                <span contenteditable="true" class="z-10">朋辈心理互助会</span>
+                <span contenteditable="true" class="absolute inset-x-0 text-center font-normal text-gray-700 text-[13px] pointer-events-auto">干事 (文宣部)</span>
+                <span contenteditable="true" class="z-10 text-gray-500 font-normal text-[13px]">2023.10 - 2024.09</span>
               </div>
-              <ul class="list-disc list-inside text-gray-700 mt-1 space-y-0.5 leading-relaxed">
+              <ul class="list-disc list-inside text-gray-700 mt-1.5 space-y-1 leading-relaxed">
                 <li contenteditable="true">独立策划落地 5 场校园主题活动，覆盖在校学生 500 余人。</li>
                 <li contenteditable="true">累计参与 5 次线下志愿落地工作，获评社团年度优秀干事，锻炼统筹规划与抗压能力。</li>
               </ul>
@@ -216,23 +209,23 @@
           </div>
         </section>
 
-        <!-- 荣誉证书 -->
-        <section class="mb-5">
-          <h2 class="section-title text-[14.5px] font-bold pb-1 mb-2 flex items-center gap-2">
+        <!-- 荣誉证书（纯文本，统一字体） -->
+        <section class="mb-7">
+          <h2 class="section-title text-[15px] font-bold pb-1.5 mb-2.5 flex items-center gap-2">
             <i class="fa-solid fa-award text-sm"></i> 荣誉证书
           </h2>
-          <div class="text-[12.5px] text-gray-700 leading-relaxed" contenteditable="true">
+          <div class="text-[13px] text-gray-700 leading-relaxed" contenteditable="true">
             英语专业四级 (TEM-4)、大学英语六级 (CET-6)、大学英语四级 (CET-4)、全国计算机等级二级、C1 机动车驾驶证、WorkBuddy 跨境电商实训营铜牌团队 / 最佳案例奖
           </div>
         </section>
       </div>
 
-      <!-- 个人总结 -->
-      <section>
-        <h2 class="section-title text-[14.5px] font-bold pb-1 mb-2 flex items-center gap-2">
+      <!-- 个人总结（无边框背景纯文本） -->
+      <section class="mt-2">
+        <h2 class="section-title text-[15px] font-bold pb-1.5 mb-2.5 flex items-center gap-2">
           <i class="fa-solid fa-user-check text-sm"></i> 个人总结
         </h2>
-        <p class="text-[12.5px] text-gray-700 leading-relaxed" contenteditable="true">
+        <p class="text-[13px] text-gray-700 leading-relaxed" contenteditable="true">
           英语专业在读本科生，拥有完整跨境电商项目实战经验，深度参与选品调研、客户开发、英文询盘对接、商务报价谈判、订单跟进转化整套外贸基础业务流程；英语读写听说能力扎实，熟练使用 Office 全套办公软件；具备优秀沟通协调、快速学习落地、团队协作抗压能力，能够快速适配外贸业务员实习岗位日常工作要求。
         </p>
       </section>
@@ -261,15 +254,6 @@
     window.addEventListener('DOMContentLoaded', () => {
       initialHTMLState = document.getElementById('resume-content').innerHTML;
       loadSavedVersionsList();
-      
-      // 防止带样式的粘贴污染字体
-      document.querySelectorAll('[contenteditable="true"]').forEach(element => {
-        element.addEventListener('paste', function(e) {
-          e.preventDefault();
-          const text = e.clipboardData.getData('text/plain');
-          document.execCommand('insertText', false, text);
-        });
-      });
     });
 
     function handleImageSelect(e) {
@@ -319,19 +303,11 @@
 
     function exportToPDF() {
       const element = document.getElementById('resume-content');
-      
-      // 精确配置 PDF 导出参数，消除边距导致的额外空白与截断
       const opt = {
         margin: 0,
         filename: '王璐瑶-个人简历.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-          scale: 2, 
-          useCORS: true,
-          scrollX: 0,
-          scrollY: 0,
-          windowWidth: document.documentElement.offsetWidth
-        },
+        html2canvas: { scale: 2, useCORS: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
