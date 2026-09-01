@@ -11,7 +11,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
-    /* A4 页面标准尺寸控制 */
     .a4-page {
       width: 210mm;
       min-height: 297mm;
@@ -22,7 +21,6 @@
       position: relative;
     }
 
-    /* 打印与导出 PDF 专属样式隔离 */
     @media print {
       body {
         background: none;
@@ -38,7 +36,6 @@
       }
     }
 
-    /* 可编辑区域的悬停反馈 */
     [contenteditable="true"]:hover {
       outline: 1px dashed #3b82f6;
       background-color: rgba(59, 130, 246, 0.03);
@@ -50,19 +47,19 @@
       border-radius: 2px;
     }
 
-    /* 模块分割线 */
     .section-title {
-      border-bottom: 2px solid #1e3a8a;
-      color: #1e3a8a;
+      border-bottom: 2px solid #1e293b;
+      color: #1e293b;
     }
   </style>
 </head>
 <body class="bg-slate-100 font-sans text-gray-800 pb-12">
 
+  <!-- 顶部控制面板 -->
   <header class="no-print bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
       <div class="flex items-center gap-2">
-        <i class="fa-solid fa-file-invoice text-blue-600 text-xl"></i>
+        <i class="fa-solid fa-file-invoice text-slate-700 text-xl"></i>
         <h1 class="text-lg font-bold text-gray-800">简历编辑器 <span class="text-xs font-normal text-gray-500">(A4 自动优化)</span></h1>
       </div>
 
@@ -78,7 +75,7 @@
           <option value="default">默认版本 (当前)</option>
         </select>
 
-        <button onclick="exportToPDF()" class="px-4 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded font-medium shadow-sm flex items-center gap-2 transition">
+        <button onclick="exportToPDF()" class="px-4 py-1.5 text-sm bg-slate-800 hover:bg-slate-900 text-white rounded font-medium shadow-sm flex items-center gap-2 transition">
           <i class="fa-solid fa-download"></i> 直接导出为 PDF
         </button>
       </div>
@@ -86,9 +83,11 @@
   </header>
 
   <main class="py-8">
+    <!-- A4 简历主容器 -->
     <div id="resume-content" class="a4-page p-10 flex flex-col justify-between">
       
       <div>
+        <!-- 头部个人信息与头像 -->
         <div class="flex justify-between items-start mb-6">
           <div class="flex-1">
             <h1 class="text-3xl font-bold tracking-wide text-gray-900 mb-2" contenteditable="true">王璐瑶</h1>
@@ -101,20 +100,22 @@
               <div><span class="font-medium text-gray-700">意向城市：</span><span contenteditable="true">宁波</span></div>
             </div>
             
+            <!-- 求职意向 -->
             <div class="mt-3 pt-2 border-t border-gray-100 text-sm">
-              <span class="font-semibold text-blue-900">求职意向：</span>
-              <span class="bg-blue-50 text-blue-800 px-2 py-0.5 rounded font-medium" contenteditable="true">外贸业务员 / 跨境电商实习生</span>
-              <span class="ml-4 text-gray-500">求职类型：<span contenteditable="true">实习</span></span>
+              <span class="font-semibold text-gray-900">求职意向：</span>
+              <span class="text-gray-800 font-medium" contenteditable="true">外贸业务员 / 跨境电商实习生</span>
+              <span class="ml-6 text-gray-500">求职类型：<span class="text-gray-700" contenteditable="true">实习</span></span>
             </div>
           </div>
 
+          <!-- 头像 -->
           <div class="relative group ml-6 flex-shrink-0">
             <div class="w-28 h-36 border border-gray-200 bg-gray-50 rounded overflow-hidden flex items-center justify-center shadow-sm">
               <img id="avatarImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='1.5'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E" class="w-full h-full object-cover" alt="证件照">
             </div>
             
             <div class="no-print absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center gap-1.5 transition-opacity rounded">
-              <label class="cursor-pointer text-xs bg-white text-gray-800 px-2 py-1 rounded shadow hover:bg-blue-50">
+              <label class="cursor-pointer text-xs bg-white text-gray-800 px-2 py-1 rounded shadow hover:bg-slate-100">
                 上传照片 <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleImageSelect(event)">
               </label>
               <button onclick="removeAvatar()" class="text-xs bg-red-600 text-white px-2 py-1 rounded shadow hover:bg-red-700">删除照片</button>
@@ -122,14 +123,15 @@
           </div>
         </div>
 
+        <!-- 教育经历 -->
         <section class="mb-5">
           <h2 class="section-title text-base font-bold pb-1 mb-2 flex items-center gap-2">
             <i class="fa-solid fa-graduation-cap text-sm"></i> 教育经历
           </h2>
-          <div class="flex justify-between items-baseline text-sm font-semibold text-gray-800">
-            <span contenteditable="true">吉首大学张家界学院</span>
-            <span contenteditable="true">英语 | 本科 (全日制)</span>
-            <span class="text-gray-500 font-normal" contenteditable="true">2023.09 - 2027.06</span>
+          <div class="grid grid-cols-3 items-center text-sm font-semibold text-gray-800">
+            <span contenteditable="true" class="text-left">吉首大学张家界学院</span>
+            <span contenteditable="true" class="text-center font-normal text-gray-700">英语 | 本科 (全日制)</span>
+            <span contenteditable="true" class="text-right text-gray-500 font-normal">2023.09 - 2027.06</span>
           </div>
           <ul class="list-disc list-inside text-xs text-gray-700 mt-1.5 space-y-1">
             <li contenteditable="true">专业成绩排名年级前 15%，在校期间连续 2 年获得校级奖学金。</li>
@@ -138,16 +140,15 @@
           </ul>
         </section>
 
+        <!-- 项目经历 -->
         <section class="mb-5">
           <h2 class="section-title text-base font-bold pb-1 mb-2 flex items-center gap-2">
             <i class="fa-solid fa-briefcase text-sm"></i> 项目经历
           </h2>
-          <div class="flex justify-between items-baseline text-sm font-semibold text-gray-800">
-            <div>
-              <span contenteditable="true">WorkBuddy 创业黑客松实训营</span>
-              <span class="text-xs font-normal text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded ml-2" contenteditable="true">FiveSpark 团队成员</span>
-            </div>
-            <span class="text-gray-500 font-normal text-xs" contenteditable="true">2026.07</span>
+          <div class="grid grid-cols-3 items-center text-sm font-semibold text-gray-800">
+            <span contenteditable="true" class="text-left">WorkBuddy 创业黑客松实训营</span>
+            <span contenteditable="true" class="text-center font-normal text-gray-700">FiveSpark 团队成员</span>
+            <span contenteditable="true" class="text-right text-gray-500 font-normal text-xs">2026.07</span>
           </div>
           <ul class="list-disc list-inside text-xs text-gray-700 mt-1.5 space-y-1">
             <li contenteditable="true">参与跨境电商完整业务全流程实训，完成产品选品、海外市场分析、客户开发、询盘回复、报价谈判与模拟订单成交全环节实操。</li>
@@ -156,15 +157,17 @@
           </ul>
         </section>
 
+        <!-- 在校经历 -->
         <section class="mb-5">
           <h2 class="section-title text-base font-bold pb-1 mb-2 flex items-center gap-2">
             <i class="fa-solid fa-users text-sm"></i> 在校经历
           </h2>
           <div class="space-y-3 text-xs">
             <div>
-              <div class="flex justify-between font-semibold text-gray-800 text-sm">
-                <span><span contenteditable="true">张家界武陵源马拉松</span> <span class="text-xs font-normal text-gray-500" contenteditable="true">| 赛事志愿者</span></span>
-                <span class="text-gray-500 font-normal text-xs" contenteditable="true">2024.04</span>
+              <div class="grid grid-cols-3 items-center font-semibold text-gray-800 text-sm">
+                <span contenteditable="true" class="text-left">张家界武陵源马拉松</span>
+                <span contenteditable="true" class="text-center font-normal text-gray-700 text-xs">赛事志愿者</span>
+                <span contenteditable="true" class="text-right text-gray-500 font-normal text-xs">2024.04</span>
               </div>
               <ul class="list-disc list-inside text-gray-700 mt-1 space-y-0.5">
                 <li contenteditable="true">对接千余名参赛选手，负责路线指引、物资分拣派发、现场秩序维护工作。</li>
@@ -173,9 +176,10 @@
             </div>
 
             <div>
-              <div class="flex justify-between font-semibold text-gray-800 text-sm">
-                <span><span contenteditable="true">社区志愿服务</span> <span class="text-xs font-normal text-gray-500" contenteditable="true">| 志愿者</span></span>
-                <span class="text-gray-500 font-normal text-xs" contenteditable="true">2024.01 - 2024.02</span>
+              <div class="grid grid-cols-3 items-center font-semibold text-gray-800 text-sm">
+                <span contenteditable="true" class="text-left">社区志愿服务</span>
+                <span contenteditable="true" class="text-center font-normal text-gray-700 text-xs">志愿者</span>
+                <span contenteditable="true" class="text-right text-gray-500 font-normal text-xs">2024.01 - 2024.02</span>
               </div>
               <ul class="list-disc list-inside text-gray-700 mt-1 space-y-0.5">
                 <li contenteditable="true">日均接待 50+ 人次居民咨询，完成 100 余份居民档案资料规整归档。</li>
@@ -184,9 +188,10 @@
             </div>
 
             <div>
-              <div class="flex justify-between font-semibold text-gray-800 text-sm">
-                <span><span contenteditable="true">朋辈心理互助会</span> <span class="text-xs font-normal text-gray-500" contenteditable="true">| 干事 (文宣部)</span></span>
-                <span class="text-gray-500 font-normal text-xs" contenteditable="true">2023.10 - 2024.09</span>
+              <div class="grid grid-cols-3 items-center font-semibold text-gray-800 text-sm">
+                <span contenteditable="true" class="text-left">朋辈心理互助会</span>
+                <span contenteditable="true" class="text-center font-normal text-gray-700 text-xs">干事 (文宣部)</span>
+                <span contenteditable="true" class="text-right text-gray-500 font-normal text-xs">2023.10 - 2024.09</span>
               </div>
               <ul class="list-disc list-inside text-gray-700 mt-1 space-y-0.5">
                 <li contenteditable="true">独立策划落地 5 场校园主题活动，覆盖在校学生 500 余人。</li>
@@ -196,21 +201,23 @@
           </div>
         </section>
 
+        <!-- 荣誉证书（收紧排版） -->
         <section class="mb-5">
           <h2 class="section-title text-base font-bold pb-1 mb-2 flex items-center gap-2">
             <i class="fa-solid fa-award text-sm"></i> 荣誉证书
           </h2>
-          <div class="flex flex-wrap gap-2 text-xs text-gray-700">
-            <span class="bg-gray-100 px-2.5 py-1 rounded" contenteditable="true">英语专业四级 (TEM-4)</span>
-            <span class="bg-gray-100 px-2.5 py-1 rounded" contenteditable="true">大学英语六级 (CET-6)</span>
-            <span class="bg-gray-100 px-2.5 py-1 rounded" contenteditable="true">大学英语四级 (CET-4)</span>
-            <span class="bg-gray-100 px-2.5 py-1 rounded" contenteditable="true">全国计算机等级二级</span>
-            <span class="bg-gray-100 px-2.5 py-1 rounded" contenteditable="true">C1 机动车驾驶证</span>
-            <span class="bg-gray-100 px-2.5 py-1 rounded" contenteditable="true">WorkBuddy 跨境电商实训营铜牌团队 / 最佳案例奖</span>
+          <div class="grid grid-cols-3 gap-2 text-xs text-gray-700">
+            <div class="bg-gray-100 px-2.5 py-1 rounded text-center" contenteditable="true">英语专业四级 (TEM-4)</div>
+            <div class="bg-gray-100 px-2.5 py-1 rounded text-center" contenteditable="true">大学英语六级 (CET-6)</div>
+            <div class="bg-gray-100 px-2.5 py-1 rounded text-center" contenteditable="true">大学英语四级 (CET-4)</div>
+            <div class="bg-gray-100 px-2.5 py-1 rounded text-center" contenteditable="true">全国计算机等级二级</div>
+            <div class="bg-gray-100 px-2.5 py-1 rounded text-center" contenteditable="true">C1 机动车驾驶证</div>
+            <div class="bg-gray-100 px-2.5 py-1 rounded text-center" contenteditable="true">跨境电商实训营铜牌团队 / 最佳案例奖</div>
           </div>
         </section>
       </div>
 
+      <!-- 个人总结 -->
       <section class="mt-2">
         <h2 class="section-title text-base font-bold pb-1 mb-2 flex items-center gap-2">
           <i class="fa-solid fa-user-check text-sm"></i> 个人总结
@@ -223,6 +230,7 @@
     </div>
   </main>
 
+  <!-- 照片裁切 Modal -->
   <div id="cropModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-lg max-w-lg w-full p-4 shadow-xl">
       <h3 class="text-lg font-bold mb-3 text-gray-800">调整与裁切照片</h3>
@@ -231,7 +239,7 @@
       </div>
       <div class="flex justify-end gap-2">
         <button onclick="closeCropModal()" class="px-4 py-1.5 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">取消</button>
-        <button onclick="applyCrop()" class="px-4 py-1.5 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">确定应用</button>
+        <button onclick="applyCrop()" class="px-4 py-1.5 bg-slate-800 text-white rounded text-sm hover:bg-slate-900">确定应用</button>
       </div>
     </div>
   </div>
@@ -240,13 +248,11 @@
     let cropper = null;
     let initialHTMLState = "";
 
-    // 页面加载完成后保存初始状态
     window.addEventListener('DOMContentLoaded', () => {
       initialHTMLState = document.getElementById('resume-content').innerHTML;
       loadSavedVersionsList();
     });
 
-    // --- 照片处理与裁切逻辑 ---
     function handleImageSelect(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -259,7 +265,7 @@
 
         if (cropper) cropper.destroy();
         cropper = new Cropper(cropImg, {
-          aspectRatio: 3 / 4, // 证件照标准比例
+          aspectRatio: 3 / 4,
           viewMode: 1,
           dragMode: 'move',
           autoCropArea: 0.9,
@@ -292,10 +298,8 @@
       document.getElementById('avatarImage').src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='1.5'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E";
     }
 
-    // --- 导出 PDF (纯前端渲染下载) ---
     function exportToPDF() {
       const element = document.getElementById('resume-content');
-      
       const opt = {
         margin: 0,
         filename: '王璐瑶-个人简历.pdf',
@@ -307,7 +311,6 @@
       html2pdf().set(opt).from(element).save();
     }
 
-    // --- 版本管理功能 ---
     function saveVersion() {
       const name = prompt("请输入此版本名称（如：针对外贸业务员JD）：");
       if (!name) return;
