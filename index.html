@@ -3,380 +3,320 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>王璐瑶 - 个人简历编辑器</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
+  <title>王璐瑶 - 个人简历</title>
   <style>
-    .a4-page {
+    /* 基础重置 */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: #333;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 简历容器 - 屏幕预览样式 */
+    .resume-page {
       width: 210mm;
       height: 297mm;
-      background: white;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      margin: 0 auto;
-      box-sizing: border-box;
+      margin: 20px auto;
+      background: #fff;
+      padding: 16mm 18mm;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       position: relative;
-      overflow: hidden;
-      /* ❗删掉flex justify‑between，这就是大片空白元凶！改用普通文档流 */
-      padding: 20mm 16mm;
-      font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+      overflow: hidden; /* 严格防止单页溢出 */
     }
 
-    @media print {
-      body {
-        background: none;
-        padding: 0;
-      }
-      .no-print {
-        display: none !important;
-      }
-      .a4-page {
-        box-shadow: none;
-        margin: 0;
-        width: 100%;
-        height: 297mm;
-      }
+    /* 头部基本信息 */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
     }
 
-    [contenteditable="true"] {
-      font-family: inherit !important;
-      font-size: inherit !important;
-      line-height: inherit !important;
+    .header-info {
+      flex: 1;
     }
 
-    [contenteditable="true"] * {
-      font-family: inherit !important;
-      font-size: inherit !important;
-      line-height: inherit !important;
+    .name {
+      font-size: 22px;
+      font-weight: bold;
+      color: #111;
+      margin-bottom: 8px;
     }
 
-    [contenteditable="true"]:hover {
-      outline: 1px dashed #3b82f6;
-      background-color: rgba(59, 130, 246, 0.03);
-      border-radius: 2px;
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 220px);
+      gap: 4px 16px;
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 8px;
     }
 
-    [contenteditable="true"]:focus {
-      outline: 2px solid #2563eb;
-      background-color: #fff;
-      border-radius: 2px;
+    .intention {
+      font-size: 13px;
+      color: #333;
+    }
+
+    .intention span {
+      margin-right: 15px;
+    }
+
+    .avatar-placeholder {
+      width: 85px;
+      height: 105px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #fafafa;
+    }
+
+    .avatar-placeholder svg {
+      width: 48px;
+      height: 48px;
+      fill: #ccc;
+    }
+
+    /* 模块通用样式 */
+    .section {
+      margin-bottom: 12px;
     }
 
     .section-title {
-      border-bottom: 2px solid #1e293b;
-      color: #1e293b;
+      font-size: 15px;
+      font-weight: bold;
+      color: #111;
+      border-bottom: 1px solid #222;
+      padding-bottom: 3px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .resume-text {
-      font-size: 12px;
+    .section-title svg {
+      width: 16px;
+      height: 16px;
+      fill: #111;
+    }
+
+    /* 列表与子项 */
+    .item {
+      margin-bottom: 6px;
+    }
+
+    .item:last-child {
+      margin-bottom: 0;
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 13.5px;
+      font-weight: bold;
+      color: #222;
+      margin-bottom: 3px;
+    }
+
+    .item-sub {
+      font-weight: normal;
+      color: #555;
+      font-size: 13px;
+    }
+
+    .date {
+      font-weight: normal;
+      color: #777;
+      font-size: 12.5px;
+    }
+
+    .bullet-list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .bullet-list li {
+      position: relative;
+      padding-left: 12px;
+      font-size: 13px;
+      color: #444;
       line-height: 1.45;
-      color: #374151;
+      margin-bottom: 2px;
     }
 
-    .resume-sm {
-      font-size: 11px;
-      line-height: 1.4;
-      color: #6b7280;
+    .bullet-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: #666;
     }
 
-    .resume-list li {
-      margin-bottom: 1px;
+    /* 文本段落 */
+    .text-block {
+      font-size: 13px;
+      color: #444;
+      line-height: 1.5;
+      text-align: justify;
     }
-    section {
-      margin-bottom: 12px;
+
+    /* A4 导出/打印 专用优化样式 */
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 0; /* 消除浏览器默认页眉页脚与外边距 */
+      }
+      html, body {
+        background: #fff;
+        margin: 0;
+        padding: 0;
+      }
+      .resume-page {
+        width: 210mm;
+        height: 297mm;
+        max-height: 297mm;
+        margin: 0;
+        padding: 15mm 18mm; /* 用内部边距严格锁死在一页 */
+        box-shadow: none;
+        page-break-after: avoid;
+        page-break-before: avoid;
+      }
     }
   </style>
 </head>
-<body class="bg-slate-100 font-sans text-gray-800 pb-12">
+<body>
 
-  <header class="no-print bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
-      <div class="flex items-center gap-2">
-        <i class="fa-solid fa-file-invoice text-slate-700 text-xl"></i>
-        <h1 class="text-lg font-bold text-gray-800">简历编辑器 <span class="text-xs font-normal text-gray-500">(A4 单页优化)</span></h1>
-      </div>
-
-      <div class="flex items-center gap-3 flex-wrap">
-        <button onclick="saveVersion()" class="px-3 py-1.5 text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 rounded flex items-center gap-1 transition">
-          <i class="fa-solid fa-bookmark"></i> 保存当前版本
-        </button>
-        <button onclick="restoreInitial()" class="px-3 py-1.5 text-sm bg-amber-50 hover:bg-amber-100 text-amber-700 rounded border border-amber-200 flex items-center gap-1 transition">
-          <i class="fa-solid fa-rotate-left"></i> 恢复初始版本
-        </button>
-        
-        <select id="versionSelect" onchange="loadSelectedVersion(this.value)" class="text-sm border border-gray-300 rounded px-2 py-1.5 bg-white">
-          <option value="default">默认版本 (当前)</option>
-        </select>
-
-        <button onclick="exportToPDF()" class="px-4 py-1.5 text-sm bg-slate-800 hover:bg-slate-900 text-white rounded font-medium shadow-sm flex items-center gap-2 transition">
-          <i class="fa-solid fa-download"></i> 直接导出为 PDF
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <main class="py-8">
-    <div id="resume-content" class="a4-page">
-      
-      <div>
-        <!-- 头部个人信息 -->
-        <div class="flex justify-between items-start mb-4">
-          <div class="flex-1">
-            <h1 class="text-2xl font-bold tracking-wide text-gray-900 mb-2" contenteditable="true">王璐瑶</h1>
-            <div class="grid grid-cols-2 gap-y-1.5 gap-x-4 resume-sm max-w-lg">
-              <div><span class="font-medium text-gray-700">性别：</span><span contenteditable="true">女</span></div>
-              <div><span class="font-medium text-gray-700">年龄：</span><span contenteditable="true">21</span></div>
-              <div><span class="font-medium text-gray-700">电话：</span><span contenteditable="true">15580163553</span></div>
-              <div><span class="font-medium text-gray-700">邮箱：</span><span contenteditable="true">willow.wly@foxmail.com</span></div>
-              <div><span class="font-medium text-gray-700">最高学历：</span><span contenteditable="true">本科</span></div>
-              <div><span class="font-medium text-gray-700">意向城市：</span><span contenteditable="true">宁波</span></div>
-            </div>
-            
-            <div class="mt-2 pt-2 border-t border-gray-100 resume-sm">
-              <span class="font-semibold text-gray-900">求职意向：</span>
-              <span class="text-gray-800 font-medium" contenteditable="true">外贸业务员 / 跨境电商实习生</span>
-              <span class="ml-4 text-gray-500">求职类型：<span class="text-gray-700" contenteditable="true">实习</span></span>
-            </div>
-          </div>
-
-          <div class="relative group ml-4 flex-shrink-0">
-            <div class="w-28 h-36 border border-gray-200 bg-gray-50 rounded overflow-hidden flex items-center justify-center shadow-sm">
-              <img id="avatarImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='1.5'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E" class="w-full h-full object-cover" alt="证件照">
-            </div>
-            
-            <div class="no-print absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center gap-1.5 transition-opacity rounded">
-              <label class="cursor-pointer text-xs bg-white text-gray-800 px-2 py-1 rounded shadow hover:bg-slate-100">
-                上传照片 <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleImageSelect(event)">
-              </label>
-              <button onclick="removeAvatar()" class="text-xs bg-red-600 text-white px-2 py-1 rounded shadow hover:bg-red-700">删除照片</button>
-            </div>
-          </div>
+  <div class="resume-page">
+    <header class="header">
+      <div class="header-info">
+        <h1 class="name">王璐瑶</h1>
+        <div class="info-grid">
+          <div>性别：女</div>
+          <div>年龄：21</div>
+          <div>电话：15580163553</div>
+          <div>邮箱：willow.wly@foxmail.com</div>
+          <div>最高学历：本科</div>
+          <div>意向城市：宁波</div>
         </div>
+        <div class="intention">
+          <span><strong>求职意向：</strong>外贸业务员 / 跨境电商实习生</span>
+          <span><strong>求职类型：</strong>实习</span>
+        </div>
+      </div>
+      <div class="avatar-placeholder">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+      </div>
+    </header>
 
-        <!-- 教育经历 -->
-        <section>
-          <h2 class="section-title text-sm font-bold pb-1 mb-2 flex items-center gap-2">
-            <i class="fa-solid fa-graduation-cap text-sm"></i> 教育经历
-          </h2>
-          <div class="relative flex justify-between items-center resume-text font-semibold text-gray-800">
-            <span contenteditable="true" class="z-10">吉首大学张家界学院</span>
-            <span contenteditable="true" class="absolute inset-x-0 text-center font-normal text-gray-700 resume-sm pointer-events-auto">英语 | 本科 (全日制)</span>
-            <span contenteditable="true" class="z-10 text-gray-500 font-normal resume-sm">2023.09 - 2027.06</span>
-          </div>
-          <ul class="list-disc list-inside resume-text resume-list mt-1.5">
-            <li contenteditable="true">专业成绩排名年级前 15%，在校期间连续 2 年获得校级奖学金。</li>
-            <li contenteditable="true">主修英语核心专业课程，夯实听说读写译综合语言能力。</li>
-            <li contenteditable="true">在校期间考取英语专业四级、大学英语四级、大学英语六级证书。</li>
-          </ul>
-        </section>
+    <section class="section">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+        教育经历
+      </div>
+      <div class="item">
+        <div class="item-header">
+          <span>吉首大学张家界学院 <span class="item-sub">| 英语 | 本科（全日制）</span></span>
+          <span class="date">2023.09 - 2027.06</span>
+        </div>
+        <ul class="bullet-list">
+          <li>专业成绩排名年级前 15%，在校期间连续 2 年获得校级奖学金。</li>
+          <li>主修英语核心专业课程，夯实听说读写译综合语言能力。</li>
+          <li>在校期间考取英语专业四级、大学英语四级、大学英语六级证书。</li>
+        </ul>
+      </div>
+    </section>
 
-        <!-- 项目经历 -->
-        <section>
-          <h2 class="section-title text-sm font-bold pb-1 mb-2 flex items-center gap-2">
-            <i class="fa-solid fa-briefcase text-sm"></i> 项目经历
-          </h2>
-          <div class="relative flex justify-between items-center resume-text font-semibold text-gray-800">
-            <span contenteditable="true" class="z-10">WorkBuddy 创业黑客松实训营</span>
-            <span contenteditable="true" class="absolute inset-x-0 text-center font-normal text-gray-700 resume-sm pointer-events-auto">FiveSpark 团队成员</span>
-            <span contenteditable="true" class="z-10 text-gray-500 font-normal resume-sm">2026.07</span>
-          </div>
-          <ul class="list-disc list-inside resume-text resume-list mt-1.5">
-            <li contenteditable="true">参与跨境电商完整业务全流程实训，完成产品选品、海外市场分析、客户开发、询盘回复、报价谈判与模拟订单成交全环节实操。</li>
-            <li contenteditable="true">团队整体积分排名第五，斩获“铜牌团队”荣誉，个人参与项目获评实训营“最佳案例奖”。</li>
-            <li contenteditable="true">熟练掌握外贸客户英文沟通、报价定价策略、订单跟进转化的基础业务方法。</li>
-          </ul>
-        </section>
+    <section class="section">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
+        项目经历
+      </div>
+      <div class="item">
+        <div class="item-header">
+          <span>WorkBuddy 创业黑客松实训营 <span class="item-sub">| FiveSpark 团队成员</span></span>
+          <span class="date">2026.07</span>
+        </div>
+        <ul class="bullet-list">
+          <li>参与跨境电商完整业务全流程实训，完成产品选品、海外市场分析、客户开发、询盘回复、报价谈判与模拟订单成交全环节实操。</li>
+          <li>团队整体积分排名第五，斩获“铜牌团队”荣誉，个人参与项目获评实训营“最佳案例奖”。</li>
+          <li>熟练掌握外贸客户英文沟通、报价定价策略、订单跟进转化的基础业务方法。</li>
+        </ul>
+      </div>
+    </section>
 
-        <!-- 在校经历 -->
-        <section>
-          <h2 class="section-title text-sm font-bold pb-1 mb-2 flex items-center gap-2">
-            <i class="fa-solid fa-users text-sm"></i> 在校经历
-          </h2>
-          <div class="space-y-3 resume-text">
-            <div>
-              <div class="relative flex justify-between items-center font-semibold text-gray-800">
-                <span contenteditable="true" class="z-10">张家界武陵源马拉松</span>
-                <span contenteditable="true" class="absolute inset-x-0 text-center font-normal text-gray-700 resume-sm pointer-events-auto">赛事志愿者</span>
-                <span contenteditable="true" class="z-10 text-gray-500 font-normal resume-sm">2024.04</span>
-              </div>
-              <ul class="list-disc list-inside resume-list mt-1">
-                <li contenteditable="true">对接千余名参赛选手，负责路线指引、物资分拣派发、现场秩序维护工作。</li>
-                <li contenteditable="true">全程零失误保障赛事正常落地，获评优秀志愿者并获得官方认证证书。</li>
-              </ul>
-            </div>
-
-            <div>
-              <div class="relative flex justify-between items-center font-semibold text-gray-800">
-                <span contenteditable="true" class="z-10">社区志愿服务</span>
-                <span contenteditable="true" class="absolute inset-x-0 text-center font-normal text-gray-700 resume-sm pointer-events-auto">志愿者</span>
-                <span contenteditable="true" class="z-10 text-gray-500 font-normal resume-sm">2024.01 - 2024.02</span>
-              </div>
-              <ul class="list-disc list-inside resume-list mt-1">
-                <li contenteditable="true">日均接待 50+ 人次居民咨询，完成 100 余份居民档案资料规整归档。</li>
-                <li contenteditable="true">梳理输出标准化办公会务文档，整体办公事务处理效率提升 50%。</li>
-              </ul>
-            </div>
-
-            <div>
-              <div class="relative flex justify-between items-center font-semibold text-gray-800">
-                <span contenteditable="true" class="z-10">朋辈心理互助会</span>
-                <span contenteditable="true" class="absolute inset-x-0 text-center font-normal text-gray-700 resume-sm pointer-events-auto">干事 (文宣部)</span>
-                <span contenteditable="true" class="z-10 text-gray-500 font-normal resume-sm">2023.10 - 2024.09</span>
-              </div>
-              <ul class="list-disc list-inside resume-list mt-1">
-                <li contenteditable="true">独立策划落地 5 场校园主题活动，覆盖在校学生 500 余人。</li>
-                <li contenteditable="true">累计参与 5 次线下志愿落地工作，获评社团年度优秀干事，锻炼统筹规划与抗压能力。</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <!-- 荣誉证书 -->
-        <section>
-          <h2 class="section-title text-sm font-bold pb-1 mb-1.5 flex items-center gap-2">
-            <i class="fa-solid fa-award text-sm"></i> 荣誉证书
-          </h2>
-          <div class="resume-text" contenteditable="true">
-            英语专业四级 (TEM-4)、大学英语六级 (CET-6)、大学英语四级 (CET-4)、全国计算机等级二级、C1 机动车驾驶证、WorkBuddy 跨境电商实训营铜牌团队 / 最佳案例奖
-          </div>
-        </section>
-
-        <!-- 个人总结 -->
-        <section>
-          <h2 class="section-title text-sm font-bold pb-1 mb-1.5 flex items-center gap-2">
-            <i class="fa-solid fa-user-check text-sm"></i> 个人总结
-          </h2>
-          <p class="resume-text" contenteditable="true">
-英语专业在读本科生，拥有完整跨境电商项目实战经验，深度参与选品调研、客户开发、英文询盘对接、商务报价谈判、订单跟进转化整套外贸基础业务流程；英语读写听说能力扎实，熟练使用 Office 全套办公软件；具备优秀沟通协调、快速学习落地、团队协作抗压能力，能够快速适配外贸业务员实习岗位日常工作要求。
-          </p>
-        </section>
+    <section class="section">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        在校经历
+      </div>
+      
+      <div class="item">
+        <div class="item-header">
+          <span>张家界武陵源马拉松 <span class="item-sub">| 赛事志愿者</span></span>
+          <span class="date">2024.04</span>
+        </div>
+        <ul class="bullet-list">
+          <li>对接千余名参赛选手，负责路线指引、物资分挑派发、现场秩序维护工作。</li>
+          <li>全程零失误保障赛事正常落地，获评优秀志愿者并获得官方认证证书。</li>
+        </ul>
       </div>
 
-    </div>
-  </main>
+      <div class="item">
+        <div class="item-header">
+          <span>社区志愿者服务 <span class="item-sub">| 志愿者</span></span>
+          <span class="date">2024.01 - 2024.02</span>
+        </div>
+        <ul class="bullet-list">
+          <li>日均接待 50+ 人次居民咨询，完成 100 余份居民档案资料规整归档。</li>
+          <li>梳理输出标准化办公会务文档，整体办公事务处理效率提升 50%。</li>
+        </ul>
+      </div>
 
-  <div id="cropModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-lg max-w-lg w-full p-4 shadow-xl">
-      <h3 class="text-lg font-bold mb-3 text-gray-800">调整与裁切照片</h3>
-      <div class="max-h-96 overflow-hidden bg-gray-100 mb-4 rounded">
-        <img id="cropImage" src="" class="max-w-full" alt="裁剪预览">
+      <div class="item">
+        <div class="item-header">
+          <span>朋辈心理互助会 <span class="item-sub">| 干事（文宣部）</span></span>
+          <span class="date">2023.10 - 2024.09</span>
+        </div>
+        <ul class="bullet-list">
+          <li>独立策划落地 5 场校园主题活动，覆盖在校学生 500 余人。</li>
+          <li>累计参与 5 次线下志愿落地工作，获评社团年度优秀干事，锻炼统筹规划与抗压能力。</li>
+        </ul>
       </div>
-      <div class="flex justify-end gap-2">
-        <button onclick="closeCropModal()" class="px-4 py-1.5 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">取消</button>
-        <button onclick="applyCrop()" class="px-4 py-1.5 bg-slate-800 text-white rounded text-sm hover:bg-slate-900">确定应用</button>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24"><path d="M12 1L9 9l-8 1 6 5.5L5.5 23 12 19l6.5 4-1.5-7.5L23 10l-8-1z"/></svg>
+        荣誉证书
       </div>
-    </div>
+      <p class="text-block">
+        英语专业四级 (TEM-4)、大学英语六级 (CET-6)、大学英语四级 (CET-4)、全国计算机等级二级、C1 机动车驾驶证、WorkBuddy 跨境电商实训营铜牌团队 / 最佳案例奖
+      </p>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        个人总结
+      </div>
+      <p class="text-block">
+        英语专业在读本科生，拥有完整跨境电商项目实战经验，深度参与选品调研、客户开发、英文询盘对接、商务报价谈判、订单跟进转化整套外贸基础业务流程；英语读写听说能力扎实，熟练使用 Office 全套办公软件；具备优秀沟通协调、快速学习落地、团队协作抗压能力，能够快速适配外贸业务员实习岗位日常工作要求。
+      </p>
+    </section>
+
   </div>
 
-  <script>
-    let cropper = null;
-    let initialHTMLState = "";
-
-    window.addEventListener('DOMContentLoaded', () => {
-      initialHTMLState = document.getElementById('resume-content').innerHTML;
-      loadSavedVersionsList();
-    });
-
-    function handleImageSelect(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const cropImg = document.getElementById('cropImage');
-        cropImg.src = event.target.result;
-        document.getElementById('cropModal').classList.remove('hidden');
-
-        if (cropper) cropper.destroy();
-        cropper = new Cropper(cropImg, {
-          aspectRatio: 3 / 4,
-          viewMode: 1,
-          dragMode: 'move',
-          autoCropArea: 0.9,
-          restore: false,
-          guides: true,
-          center: true,
-          highlight: false,
-          cropBoxMovable: true,
-          cropBoxResizable: true,
-          toggleDragModeOnDblclick: false,
-        });
-      };
-      reader.readAsDataURL(file);
-      e.target.value = '';
-    }
-
-    function closeCropModal() {
-      document.getElementById('cropModal').classList.add('hidden');
-      if (cropper) cropper.destroy();
-    }
-
-    function applyCrop() {
-      if (!cropper) return;
-      const canvas = cropper.getCroppedCanvas({ width: 300, height: 400 });
-      document.getElementById('avatarImage').src = canvas.toDataURL('image/jpeg');
-      closeCropModal();
-    }
-
-    function removeAvatar() {
-      document.getElementById('avatarImage').src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='1.5'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E";
-    }
-
-    function exportToPDF() {
-      const element = document.getElementById('resume-content');
-      const opt = {
-        margin: 0,
-        filename: '王璐瑶-个人简历.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-
-      html2pdf().set(opt).from(element).save();
-    }
-
-    function saveVersion() {
-      const name = prompt("请输入此版本名称（如：针对外贸业务员JD）：");
-      if (!name) return;
-
-      const versions = JSON.parse(localStorage.getItem('resume_versions') || '{}');
-      versions[name] = document.getElementById('resume-content').innerHTML;
-      localStorage.setItem('resume_versions', JSON.stringify(versions));
-      
-      loadSavedVersionsList();
-      alert(`版本 "${name}" 保存成功！`);
-    }
-
-    function loadSavedVersionsList() {
-      const versions = JSON.parse(localStorage.getItem('resume_versions') || '{}');
-      const select = document.getElementById('versionSelect');
-      select.innerHTML = '<option value="default">默认版本 (当前)</option>';
-      
-      Object.keys(versions).forEach(name => {
-        const option = document.createElement('option');
-        option.value = name;
-        option.innerText = name;
-        select.appendChild(option);
-      });
-    }
-
-    function loadSelectedVersion(name) {
-      if (name === 'default') return;
-      const versions = JSON.parse(localStorage.getItem('resume_versions') || '{}');
-      if (versions[name]) {
-        document.getElementById('resume-content').innerHTML = versions[name];
-      }
-    }
-
-    function restoreInitial() {
-      if (confirm("确定要恢复到最开始的初始简历版本吗？已保存的自定义版本不会被删除。")) {
-        document.getElementById('resume-content').innerHTML = initialHTMLState;
-        document.getElementById('versionSelect').value = 'default';
-      }
-    }
-  </script>
 </body>
 </html>
