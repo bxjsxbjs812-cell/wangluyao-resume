@@ -20,6 +20,8 @@
       box-sizing: border-box;
       position: relative;
       overflow: hidden;
+      /* ❗删掉flex justify‑between，这就是大片空白元凶！改用普通文档流 */
+      padding: 20mm 16mm;
       font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
     }
 
@@ -70,18 +72,21 @@
 
     .resume-text {
       font-size: 12px;
-      line-height: 1.5;
+      line-height: 1.45;
       color: #374151;
     }
 
     .resume-sm {
       font-size: 11px;
-      line-height: 1.45;
+      line-height: 1.4;
       color: #6b7280;
     }
 
     .resume-list li {
-      margin-bottom: 2px;
+      margin-bottom: 1px;
+    }
+    section {
+      margin-bottom: 12px;
     }
   </style>
 </head>
@@ -114,10 +119,10 @@
   </header>
 
   <main class="py-8">
-    <div id="resume-content" class="a4-page p-6 flex flex-col justify-between">
+    <div id="resume-content" class="a4-page">
       
       <div>
-        <!-- 头部个人信息与头像 -->
+        <!-- 头部个人信息 -->
         <div class="flex justify-between items-start mb-4">
           <div class="flex-1">
             <h1 class="text-2xl font-bold tracking-wide text-gray-900 mb-2" contenteditable="true">王璐瑶</h1>
@@ -152,7 +157,7 @@
         </div>
 
         <!-- 教育经历 -->
-        <section class="mb-3">
+        <section>
           <h2 class="section-title text-sm font-bold pb-1 mb-2 flex items-center gap-2">
             <i class="fa-solid fa-graduation-cap text-sm"></i> 教育经历
           </h2>
@@ -169,7 +174,7 @@
         </section>
 
         <!-- 项目经历 -->
-        <section class="mb-3">
+        <section>
           <h2 class="section-title text-sm font-bold pb-1 mb-2 flex items-center gap-2">
             <i class="fa-solid fa-briefcase text-sm"></i> 项目经历
           </h2>
@@ -186,7 +191,7 @@
         </section>
 
         <!-- 在校经历 -->
-        <section class="mb-3">
+        <section>
           <h2 class="section-title text-sm font-bold pb-1 mb-2 flex items-center gap-2">
             <i class="fa-solid fa-users text-sm"></i> 在校经历
           </h2>
@@ -230,7 +235,7 @@
         </section>
 
         <!-- 荣誉证书 -->
-        <section class="mb-2">
+        <section>
           <h2 class="section-title text-sm font-bold pb-1 mb-1.5 flex items-center gap-2">
             <i class="fa-solid fa-award text-sm"></i> 荣誉证书
           </h2>
@@ -238,17 +243,17 @@
             英语专业四级 (TEM-4)、大学英语六级 (CET-6)、大学英语四级 (CET-4)、全国计算机等级二级、C1 机动车驾驶证、WorkBuddy 跨境电商实训营铜牌团队 / 最佳案例奖
           </div>
         </section>
-      </div>
 
-      <!-- 个人总结 -->
-      <section class="mt-0">
-        <h2 class="section-title text-sm font-bold pb-1 mb-1.5 flex items-center gap-2">
-          <i class="fa-solid fa-user-check text-sm"></i> 个人总结
-        </h2>
-        <p class="resume-text" contenteditable="true">
-          英语专业在读本科生，拥有完整跨境电商项目实战经验，深度参与选品调研、客户开发、英文询盘对接、商务报价谈判、订单跟进转化整套外贸基础业务流程；英语读写听说能力扎实，熟练使用 Office 全套办公软件；具备优秀沟通协调、快速学习落地、团队协作抗压能力，能够快速适配外贸业务员实习岗位日常工作要求。
-        </p>
-      </section>
+        <!-- 个人总结 -->
+        <section>
+          <h2 class="section-title text-sm font-bold pb-1 mb-1.5 flex items-center gap-2">
+            <i class="fa-solid fa-user-check text-sm"></i> 个人总结
+          </h2>
+          <p class="resume-text" contenteditable="true">
+英语专业在读本科生，拥有完整跨境电商项目实战经验，深度参与选品调研、客户开发、英文询盘对接、商务报价谈判、订单跟进转化整套外贸基础业务流程；英语读写听说能力扎实，熟练使用 Office 全套办公软件；具备优秀沟通协调、快速学习落地、团队协作抗压能力，能够快速适配外贸业务员实习岗位日常工作要求。
+          </p>
+        </section>
+      </div>
 
     </div>
   </main>
