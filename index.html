@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>王璐瑶 - 个人简历编辑器</title>
+    <!-- 引入 html2pdf.js 用于导出 PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
             --primary-color: #1a568c;
             --text-color: #333333;
             --light-bg: #f8f9fa;
-            --border-color: #e0e0e0;
         }
 
         * {
@@ -20,11 +20,11 @@
         }
 
         body {
-            font-family: "Helvetica Neue", Helvetica, Arial, "Microsoft YaHei", "PingFang SC", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft YaHei", sans-serif;
             background-color: #eef2f5;
             color: var(--text-color);
-            line-height: 1.5;
-            padding-bottom: 40px;
+            line-height: 1.45;
+            padding-bottom: 30px;
         }
 
         /* 顶部操作工具栏 */
@@ -33,18 +33,18 @@
             top: 0;
             z-index: 1000;
             background: #ffffff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 12px 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 900px;
-            margin: 0 auto 20px auto;
-            border-radius: 0 0 8px 8px;
+            max-width: 210mm;
+            margin: 0 auto 15px auto;
+            border-radius: 0 0 6px 6px;
         }
 
         .toolbar h2 {
-            font-size: 16px;
+            font-size: 15px;
             color: var(--primary-color);
         }
 
@@ -52,11 +52,10 @@
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 8px 16px;
-            font-size: 14px;
+            padding: 6px 14px;
+            font-size: 13px;
             border-radius: 4px;
             cursor: pointer;
-            transition: background 0.2s;
             font-weight: bold;
         }
 
@@ -64,48 +63,49 @@
             background-color: #13426b;
         }
 
-        /* A4 简历画布容器 */
+        /* A4 简历画布容器（严格控制高度与内边距以保证1页A4） */
         .resume-page {
             width: 210mm;
-            min-height: 297mm;
-            padding: 18mm 20mm;
+            height: 296mm; /* 稍小于 297mm，防临界点溢出 */
+            padding: 12mm 15mm;
             margin: 0 auto;
             background: white;
-            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
             position: relative;
+            overflow: hidden; /* 防止内容超出引发出第二页 */
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        /* 顶部个人基本信息与照片布局 */
+        /* 头部：基本信息与证件照 */
         .header-section {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 15px;
-            padding-bottom: 12px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
             border-bottom: 2px solid var(--primary-color);
         }
 
         .header-info {
             flex: 1;
-            padding-right: 20px;
+            padding-right: 15px;
         }
 
         .name {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: bold;
             color: var(--primary-color);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             outline: none;
         }
 
         .info-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 6px 15px;
-            font-size: 13.5px;
+            gap: 4px 10px;
+            font-size: 13px;
         }
 
         .info-item {
@@ -119,10 +119,10 @@
             margin-right: 4px;
         }
 
-        /* 证件照组件设计 */
+        /* 证件照组件 */
         .photo-container {
-            width: 105px;
-            height: 140px;
+            width: 95px;
+            height: 125px;
             border: 1px dashed #ccc;
             position: relative;
             background: var(--light-bg);
@@ -155,7 +155,7 @@
             left: 0;
             right: 0;
             background: rgba(0, 0, 0, 0.65);
-            padding: 4px;
+            padding: 3px;
             display: flex;
             justify-content: space-around;
             align-items: center;
@@ -170,88 +170,93 @@
 
         .photo-btn {
             color: white;
-            font-size: 11px;
+            font-size: 10px;
             cursor: pointer;
             background: none;
             border: none;
-            padding: 2px 4px;
-        }
-
-        .photo-btn:hover {
-            text-decoration: underline;
+            padding: 2px;
         }
 
         .zoom-slider {
-            width: 40px;
+            width: 35px;
         }
 
         #file-input {
             display: none;
         }
 
-        /* 简历通用模块样式 */
+        /* 通用模块样式 */
         .section {
-            margin-bottom: 14px;
+            margin-bottom: 10px;
         }
 
         .section-title {
-            font-size: 15px;
+            font-size: 14.5px;
             font-weight: bold;
             color: var(--primary-color);
-            border-left: 4px solid var(--primary-color);
-            padding-left: 8px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .item-sub {
-            color: #666;
-            font-size: 13px;
+            border-left: 3.5px solid var(--primary-color);
+            padding-left: 6px;
             margin-bottom: 6px;
         }
 
+        /* 头部三列对齐排版 (左侧名称 | 中间职位 | 右侧时间) */
+        .item-header-3col {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1fr;
+            align-items: center;
+            font-size: 13.5px;
+            margin-bottom: 3px;
+        }
+
+        .item-header-3col .col-left {
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .item-header-3col .col-center {
+            font-weight: bold;
+            text-align: center;
+            color: #444;
+        }
+
+        .item-header-3col .col-right {
+            font-weight: bold;
+            text-align: right;
+            color: #333;
+        }
+
+        .item-sub {
+            color: #555;
+            font-size: 12.5px;
+            margin-bottom: 4px;
+        }
+
         ul.bullets {
-            padding-left: 18px;
-            font-size: 13px;
+            padding-left: 16px;
+            font-size: 12.5px;
             color: #333;
         }
 
         ul.bullets li {
-            margin-bottom: 4px;
-            line-height: 1.45;
+            margin-bottom: 2px;
+            line-height: 1.4;
         }
 
-        .tags-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            font-size: 13px;
-        }
-
-        .tag {
-            background: #edf4f9;
-            color: var(--primary-color);
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-weight: 500;
+        /* 纯文本证书列表 */
+        .cert-list {
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: #333;
         }
 
         .summary-text {
-            font-size: 13px;
-            line-height: 1.6;
-            color: #444;
+            font-size: 12.5px;
+            line-height: 1.5;
+            color: #333;
             text-align: justify;
         }
 
-        /* 导出时的打印优化处理 */
+        /* 打印与 PDF 导出优化 */
         @media print {
             body {
                 background: white;
@@ -262,8 +267,9 @@
             }
             .resume-page {
                 box-shadow: none;
-                padding: 15mm 18mm;
+                padding: 10mm 12mm;
                 width: 100%;
+                height: 100vh;
             }
             .photo-controls {
                 display: none !important;
@@ -276,13 +282,16 @@
 </head>
 <body>
 
+    <!-- 顶栏操作区 -->
     <div class="toolbar" data-html2pdf-ignore="true">
-        <h2>简历编辑器（支持文本实时修改）</h2>
-        <button class="btn" onclick="exportToPDF()">下载导出 PDF</button>
+        <h2>简历编辑器（支持编辑内容）</h2>
+        <button class="btn" onclick="exportToPDF()">下载导出 PDF (单页 A4)</button>
     </div>
 
+    <!-- 简历主画布 -->
     <div class="resume-page" id="resume">
         <div>
+            <!-- 头部基本信息 -->
             <div class="header-section">
                 <div class="header-info">
                     <div class="name" contenteditable="true">王璐瑶</div>
@@ -291,16 +300,17 @@
                         <div class="info-item"><span class="label">年龄：</span><span contenteditable="true">21</span></div>
                         <div class="info-item"><span class="label">电话：</span><span contenteditable="true">15580163553</span></div>
                         <div class="info-item"><span class="label">最高学历：</span><span contenteditable="true">本科</span></div>
-                        <div class="info-item"><span class="label">邮箱：</span><span contenteditable="true">willow.wly@foxmail.com</span></div>
+                        <div class="info-item"><span class="label">邮箱：</span><span contenteditable="true">15580163553@163.com</span></div>
                         <div class="info-item"><span class="label">意向城市：</span><span contenteditable="true">宁波</span></div>
                     </div>
                 </div>
 
+                <!-- 证件照上传与裁切 -->
                 <div class="photo-container" id="photoContainer">
                     <div class="photo-wrapper" id="photoWrapper" style="display: none;">
                         <img id="userPhoto" src="" alt="证件照">
                     </div>
-                    <div id="uploadPlaceholder" style="text-align: center; color: #888; font-size: 12px; cursor: pointer;" onclick="triggerUpload()">
+                    <div id="uploadPlaceholder" style="text-align: center; color: #888; font-size: 11px; cursor: pointer;" onclick="triggerUpload()">
                         点击上传<br>证件照
                     </div>
                     <div class="photo-controls" id="photoControls" style="display: none;">
@@ -312,21 +322,23 @@
                 </div>
             </div>
 
+            <!-- 求职意向 -->
             <div class="section">
                 <div class="section-title">求职意向</div>
-                <div class="item-header">
-                    <span>意向岗位：<span contenteditable="true" style="font-weight: normal;">外贸业务员 / 跨境电商实习生</span></span>
-                    <span>求职类型：<span contenteditable="true" style="font-weight: normal;">实习</span></span>
+                <div style="display: flex; justify-content: space-between; font-size: 13.5px;">
+                    <span>意向岗位：<span contenteditable="true">外贸业务员 / 跨境电商实习生</span></span>
+                    <span>求职类型：<span contenteditable="true">实习</span></span>
                 </div>
             </div>
 
+            <!-- 教育经历 -->
             <div class="section">
                 <div class="section-title">教育经历</div>
-                <div class="item-header">
-                    <span contenteditable="true">吉首大学张家界学院</span>
-                    <span contenteditable="true">2023.09 - 2027.06</span>
+                <div class="item-header-3col">
+                    <div class="col-left" contenteditable="true">吉首大学张家界学院</div>
+                    <div class="col-center" contenteditable="true">英语 | 本科(全日制)</div>
+                    <div class="col-right" contenteditable="true">2023.09 - 2027.06</div>
                 </div>
-                <div class="item-sub" contenteditable="true">英语 | 本科(全日制)</div>
                 <ul class="bullets">
                     <li contenteditable="true">专业成绩排名年级前15%，在校期间连续2年获得校级奖学金。</li>
                     <li contenteditable="true">主修英语核心专业课程，夯实听说读写译综合语言能力。</li>
@@ -334,13 +346,14 @@
                 </ul>
             </div>
 
+            <!-- 项目经历 -->
             <div class="section">
                 <div class="section-title">项目经历</div>
-                <div class="item-header">
-                    <span contenteditable="true">WorkBuddy创业黑客松实训营</span>
-                    <span contenteditable="true">2026.07</span>
+                <div class="item-header-3col">
+                    <div class="col-left" contenteditable="true">WorkBuddy创业黑客松实训营</div>
+                    <div class="col-center" contenteditable="true">FiveSpark 团队成员</div>
+                    <div class="col-right" contenteditable="true">2026.07</div>
                 </div>
-                <div class="item-sub" contenteditable="true">FiveSpark 团队成员</div>
                 <ul class="bullets">
                     <li contenteditable="true">参与跨境电商完整业务全流程实训，完成产品选品、海外市场分析、客户开发、询盘回复、报价谈判与模拟订单成交全环节实操。</li>
                     <li contenteditable="true">团队整体积分排名第五，斩获“铜牌团队”荣誉，个人参与项目获评实训营“最佳案例奖”。</li>
@@ -348,27 +361,28 @@
                 </ul>
             </div>
 
+            <!-- 在校经历 -->
             <div class="section">
                 <div class="section-title">在校经历</div>
                 
-                <div style="margin-bottom: 8px;">
-                    <div class="item-header">
-                        <span contenteditable="true">张家界武陵源马拉松</span>
-                        <span contenteditable="true">2024.04</span>
+                <div style="margin-bottom: 6px;">
+                    <div class="item-header-3col">
+                        <div class="col-left" contenteditable="true">张家界武陵源马拉松</div>
+                        <div class="col-center" contenteditable="true">赛事志愿者</div>
+                        <div class="col-right" contenteditable="true">2024.04</div>
                     </div>
-                    <div class="item-sub" contenteditable="true">赛事志愿者</div>
                     <ul class="bullets">
                         <li contenteditable="true">对接千余名参赛选手，负责路线指引、物资分拣派发、现场秩序维护工作。</li>
                         <li contenteditable="true">全程零失误保障赛事正常落地，获评优秀志愿者并获得官方认证证书。</li>
                     </ul>
                 </div>
 
-                <div style="margin-bottom: 8px;">
-                    <div class="item-header">
-                        <span contenteditable="true">社区志愿服务</span>
-                        <span contenteditable="true">2024.01 - 2024.02</span>
+                <div style="margin-bottom: 6px;">
+                    <div class="item-header-3col">
+                        <div class="col-left" contenteditable="true">社区志愿服务</div>
+                        <div class="col-center" contenteditable="true">志愿者</div>
+                        <div class="col-right" contenteditable="true">2024.01 - 2024.02</div>
                     </div>
-                    <div class="item-sub" contenteditable="true">志愿者</div>
                     <ul class="bullets">
                         <li contenteditable="true">日均接待50+人次居民咨询，完成100余份居民档案资料规整归档。</li>
                         <li contenteditable="true">梳理输出标准化办公会务文档，整体办公事务处理效率提升50%。</li>
@@ -376,11 +390,11 @@
                 </div>
 
                 <div>
-                    <div class="item-header">
-                        <span contenteditable="true">朋辈心理互助会</span>
-                        <span contenteditable="true">2023.10 - 2024.09</span>
+                    <div class="item-header-3col">
+                        <div class="col-left" contenteditable="true">朋辈心理互助会</div>
+                        <div class="col-center" contenteditable="true">干事 (文宣部)</div>
+                        <div class="col-right" contenteditable="true">2023.10 - 2024.09</div>
                     </div>
-                    <div class="item-sub" contenteditable="true">干事 (文宣部)</div>
                     <ul class="bullets">
                         <li contenteditable="true">独立策划落地5场校园主题活动，覆盖在校学生500余人。</li>
                         <li contenteditable="true">累计参与5次线下志愿落地工作，获评社团年度优秀干事，锻炼统筹规划与抗压能力。</li>
@@ -388,18 +402,15 @@
                 </div>
             </div>
 
+            <!-- 荣誉证书（纯文本列表格式，字体统一） -->
             <div class="section">
                 <div class="section-title">荣誉证书</div>
-                <div class="tags-container">
-                    <span class="tag" contenteditable="true">英语专业四级 (TEM-4)</span>
-                    <span class="tag" contenteditable="true">大学英语六级 (CET-6)</span>
-                    <span class="tag" contenteditable="true">大学英语四级 (CET-4)</span>
-                    <span class="tag" contenteditable="true">全国计算机等级二级</span>
-                    <span class="tag" contenteditable="true">C1机动车驾驶证</span>
-                    <span class="tag" contenteditable="true">WorkBuddy跨境电商实训营铜牌团队/最佳案例奖</span>
+                <div class="cert-list" contenteditable="true">
+                    英语专业四级 (TEM-4)、大学英语六级 (CET-6)、大学英语四级 (CET-4)、全国计算机等级二级、WorkBuddy 跨境电商实训营铜牌团队 / 最佳案例奖、阿里巴巴国际站操盘官业务岗/运营岗证书、C1 机动车驾驶证
                 </div>
             </div>
 
+            <!-- 个人总结 -->
             <div class="section">
                 <div class="section-title">个人总结</div>
                 <div class="summary-text" contenteditable="true">
@@ -409,8 +420,8 @@
         </div>
     </div>
 
+    <!-- 交互与逻辑脚本 -->
     <script>
-        // 照片上传、裁切缩放与拖拽逻辑
         const fileInput = document.getElementById('file-input');
         const img = document.getElementById('userPhoto');
         const wrapper = document.getElementById('photoWrapper');
@@ -468,7 +479,6 @@
             updateImageTransform();
         });
 
-        // 拖拽平移图片
         wrapper.addEventListener('mousedown', (e) => {
             isDragging = true;
             startX = e.clientX - posX;
@@ -488,12 +498,12 @@
             if(wrapper) wrapper.style.cursor = 'grab';
         });
 
-        // PDF 导出功能
+        // 导出 PDF 保证严格单页 A4
         function exportToPDF() {
             const element = document.getElementById('resume');
             const opt = {
                 margin:       0,
-                filename:     '王璐瑶_英语_简历.pdf',
+                filename:     '王璐瑶_个人简历.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
