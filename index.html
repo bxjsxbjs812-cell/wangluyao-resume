@@ -1,322 +1,506 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>王璐瑶 - 个人简历</title>
-  <style>
-    /* 基础重置 */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>王璐瑶 - 个人简历编辑器</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #1a568c;
+            --text-color: #333333;
+            --light-bg: #f8f9fa;
+            --border-color: #e0e0e0;
+        }
 
-    body {
-      background-color: #f5f5f5;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-      color: #333;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    /* 简历容器 - 屏幕预览样式 */
-    .resume-page {
-      width: 210mm;
-      height: 297mm;
-      margin: 20px auto;
-      background: #fff;
-      padding: 16mm 18mm;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      position: relative;
-      overflow: hidden; /* 严格防止单页溢出 */
-    }
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, "Microsoft YaHei", "PingFang SC", sans-serif;
+            background-color: #eef2f5;
+            color: var(--text-color);
+            line-height: 1.5;
+            padding-bottom: 40px;
+        }
 
-    /* 头部基本信息 */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 12px;
-    }
+        /* 顶部操作工具栏 */
+        .toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 900px;
+            margin: 0 auto 20px auto;
+            border-radius: 0 0 8px 8px;
+        }
 
-    .header-info {
-      flex: 1;
-    }
+        .toolbar h2 {
+            font-size: 16px;
+            color: var(--primary-color);
+        }
 
-    .name {
-      font-size: 22px;
-      font-weight: bold;
-      color: #111;
-      margin-bottom: 8px;
-    }
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: bold;
+        }
 
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 220px);
-      gap: 4px 16px;
-      font-size: 13px;
-      color: #555;
-      margin-bottom: 8px;
-    }
+        .btn:hover {
+            background-color: #13426b;
+        }
 
-    .intention {
-      font-size: 13px;
-      color: #333;
-    }
+        /* A4 简历画布容器 */
+        .resume-page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 18mm 20mm;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
 
-    .intention span {
-      margin-right: 15px;
-    }
+        /* 顶部个人基本信息与照片布局 */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-color);
+        }
 
-    .avatar-placeholder {
-      width: 85px;
-      height: 105px;
-      border: 1px solid #e0e0e0;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #fafafa;
-    }
+        .header-info {
+            flex: 1;
+            padding-right: 20px;
+        }
 
-    .avatar-placeholder svg {
-      width: 48px;
-      height: 48px;
-      fill: #ccc;
-    }
+        .name {
+            font-size: 26px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            outline: none;
+        }
 
-    /* 模块通用样式 */
-    .section {
-      margin-bottom: 12px;
-    }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px 15px;
+            font-size: 13.5px;
+        }
 
-    .section-title {
-      font-size: 15px;
-      font-weight: bold;
-      color: #111;
-      border-bottom: 1px solid #222;
-      padding-bottom: 3px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+        .info-item {
+            display: flex;
+            align-items: center;
+        }
 
-    .section-title svg {
-      width: 16px;
-      height: 16px;
-      fill: #111;
-    }
+        .info-item span.label {
+            font-weight: bold;
+            color: #555;
+            margin-right: 4px;
+        }
 
-    /* 列表与子项 */
-    .item {
-      margin-bottom: 6px;
-    }
+        /* 证件照组件设计 */
+        .photo-container {
+            width: 105px;
+            height: 140px;
+            border: 1px dashed #ccc;
+            position: relative;
+            background: var(--light-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
 
-    .item:last-child {
-      margin-bottom: 0;
-    }
+        .photo-wrapper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            cursor: grab;
+            overflow: hidden;
+        }
 
-    .item-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      font-size: 13.5px;
-      font-weight: bold;
-      color: #222;
-      margin-bottom: 3px;
-    }
+        .photo-wrapper img {
+            position: absolute;
+            user-select: none;
+            transform-origin: center center;
+        }
 
-    .item-sub {
-      font-weight: normal;
-      color: #555;
-      font-size: 13px;
-    }
+        .photo-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.65);
+            padding: 4px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 10;
+        }
 
-    .date {
-      font-weight: normal;
-      color: #777;
-      font-size: 12.5px;
-    }
+        .photo-container:hover .photo-controls {
+            opacity: 1;
+        }
 
-    .bullet-list {
-      list-style: none;
-      padding-left: 0;
-    }
+        .photo-btn {
+            color: white;
+            font-size: 11px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 2px 4px;
+        }
 
-    .bullet-list li {
-      position: relative;
-      padding-left: 12px;
-      font-size: 13px;
-      color: #444;
-      line-height: 1.45;
-      margin-bottom: 2px;
-    }
+        .photo-btn:hover {
+            text-decoration: underline;
+        }
 
-    .bullet-list li::before {
-      content: "•";
-      position: absolute;
-      left: 0;
-      top: 0;
-      color: #666;
-    }
+        .zoom-slider {
+            width: 40px;
+        }
 
-    /* 文本段落 */
-    .text-block {
-      font-size: 13px;
-      color: #444;
-      line-height: 1.5;
-      text-align: justify;
-    }
+        #file-input {
+            display: none;
+        }
 
-    /* A4 导出/打印 专用优化样式 */
-    @media print {
-      @page {
-        size: A4 portrait;
-        margin: 0; /* 消除浏览器默认页眉页脚与外边距 */
-      }
-      html, body {
-        background: #fff;
-        margin: 0;
-        padding: 0;
-      }
-      .resume-page {
-        width: 210mm;
-        height: 297mm;
-        max-height: 297mm;
-        margin: 0;
-        padding: 15mm 18mm; /* 用内部边距严格锁死在一页 */
-        box-shadow: none;
-        page-break-after: avoid;
-        page-break-before: avoid;
-      }
-    }
-  </style>
+        /* 简历通用模块样式 */
+        .section {
+            margin-bottom: 14px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 8px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .item-sub {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        ul.bullets {
+            padding-left: 18px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        ul.bullets li {
+            margin-bottom: 4px;
+            line-height: 1.45;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .tag {
+            background: #edf4f9;
+            color: var(--primary-color);
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        .summary-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #444;
+            text-align: justify;
+        }
+
+        /* 导出时的打印优化处理 */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .toolbar {
+                display: none;
+            }
+            .resume-page {
+                box-shadow: none;
+                padding: 15mm 18mm;
+                width: 100%;
+            }
+            .photo-controls {
+                display: none !important;
+            }
+            .photo-container {
+                border: none;
+            }
+        }
+    </style>
 </head>
 <body>
 
-  <div class="resume-page">
-    <header class="header">
-      <div class="header-info">
-        <h1 class="name">王璐瑶</h1>
-        <div class="info-grid">
-          <div>性别：女</div>
-          <div>年龄：21</div>
-          <div>电话：15580163553</div>
-          <div>邮箱：willow.wly@foxmail.com</div>
-          <div>最高学历：本科</div>
-          <div>意向城市：宁波</div>
+    <div class="toolbar" data-html2pdf-ignore="true">
+        <h2>简历编辑器（支持文本实时修改）</h2>
+        <button class="btn" onclick="exportToPDF()">下载导出 PDF</button>
+    </div>
+
+    <div class="resume-page" id="resume">
+        <div>
+            <div class="header-section">
+                <div class="header-info">
+                    <div class="name" contenteditable="true">王璐瑶</div>
+                    <div class="info-grid">
+                        <div class="info-item"><span class="label">性别：</span><span contenteditable="true">女</span></div>
+                        <div class="info-item"><span class="label">年龄：</span><span contenteditable="true">21</span></div>
+                        <div class="info-item"><span class="label">电话：</span><span contenteditable="true">15580163553</span></div>
+                        <div class="info-item"><span class="label">最高学历：</span><span contenteditable="true">本科</span></div>
+                        <div class="info-item"><span class="label">邮箱：</span><span contenteditable="true">willow.wly@foxmail.com</span></div>
+                        <div class="info-item"><span class="label">意向城市：</span><span contenteditable="true">宁波</span></div>
+                    </div>
+                </div>
+
+                <div class="photo-container" id="photoContainer">
+                    <div class="photo-wrapper" id="photoWrapper" style="display: none;">
+                        <img id="userPhoto" src="" alt="证件照">
+                    </div>
+                    <div id="uploadPlaceholder" style="text-align: center; color: #888; font-size: 12px; cursor: pointer;" onclick="triggerUpload()">
+                        点击上传<br>证件照
+                    </div>
+                    <div class="photo-controls" id="photoControls" style="display: none;">
+                        <button class="photo-btn" onclick="triggerUpload()">换图</button>
+                        <input type="range" class="zoom-slider" id="zoomSlider" min="0.5" max="2.5" step="0.05" value="1" title="缩放">
+                        <button class="photo-btn" onclick="removePhoto()">删除</button>
+                    </div>
+                    <input type="file" id="file-input" accept="image/*" onchange="handlePhotoUpload(event)">
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">求职意向</div>
+                <div class="item-header">
+                    <span>意向岗位：<span contenteditable="true" style="font-weight: normal;">外贸业务员 / 跨境电商实习生</span></span>
+                    <span>求职类型：<span contenteditable="true" style="font-weight: normal;">实习</span></span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">教育经历</div>
+                <div class="item-header">
+                    <span contenteditable="true">吉首大学张家界学院</span>
+                    <span contenteditable="true">2023.09 - 2027.06</span>
+                </div>
+                <div class="item-sub" contenteditable="true">英语 | 本科(全日制)</div>
+                <ul class="bullets">
+                    <li contenteditable="true">专业成绩排名年级前15%，在校期间连续2年获得校级奖学金。</li>
+                    <li contenteditable="true">主修英语核心专业课程，夯实听说读写译综合语言能力。</li>
+                    <li contenteditable="true">在校期间考取英语专业四级、大学英语四级、大学英语六级证书。</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <div class="section-title">项目经历</div>
+                <div class="item-header">
+                    <span contenteditable="true">WorkBuddy创业黑客松实训营</span>
+                    <span contenteditable="true">2026.07</span>
+                </div>
+                <div class="item-sub" contenteditable="true">FiveSpark 团队成员</div>
+                <ul class="bullets">
+                    <li contenteditable="true">参与跨境电商完整业务全流程实训，完成产品选品、海外市场分析、客户开发、询盘回复、报价谈判与模拟订单成交全环节实操。</li>
+                    <li contenteditable="true">团队整体积分排名第五，斩获“铜牌团队”荣誉，个人参与项目获评实训营“最佳案例奖”。</li>
+                    <li contenteditable="true">熟练掌握外贸客户英文沟通、报价定价策略、订单跟进转化的基础业务方法。</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <div class="section-title">在校经历</div>
+                
+                <div style="margin-bottom: 8px;">
+                    <div class="item-header">
+                        <span contenteditable="true">张家界武陵源马拉松</span>
+                        <span contenteditable="true">2024.04</span>
+                    </div>
+                    <div class="item-sub" contenteditable="true">赛事志愿者</div>
+                    <ul class="bullets">
+                        <li contenteditable="true">对接千余名参赛选手，负责路线指引、物资分拣派发、现场秩序维护工作。</li>
+                        <li contenteditable="true">全程零失误保障赛事正常落地，获评优秀志愿者并获得官方认证证书。</li>
+                    </ul>
+                </div>
+
+                <div style="margin-bottom: 8px;">
+                    <div class="item-header">
+                        <span contenteditable="true">社区志愿服务</span>
+                        <span contenteditable="true">2024.01 - 2024.02</span>
+                    </div>
+                    <div class="item-sub" contenteditable="true">志愿者</div>
+                    <ul class="bullets">
+                        <li contenteditable="true">日均接待50+人次居民咨询，完成100余份居民档案资料规整归档。</li>
+                        <li contenteditable="true">梳理输出标准化办公会务文档，整体办公事务处理效率提升50%。</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="item-header">
+                        <span contenteditable="true">朋辈心理互助会</span>
+                        <span contenteditable="true">2023.10 - 2024.09</span>
+                    </div>
+                    <div class="item-sub" contenteditable="true">干事 (文宣部)</div>
+                    <ul class="bullets">
+                        <li contenteditable="true">独立策划落地5场校园主题活动，覆盖在校学生500余人。</li>
+                        <li contenteditable="true">累计参与5次线下志愿落地工作，获评社团年度优秀干事，锻炼统筹规划与抗压能力。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">荣誉证书</div>
+                <div class="tags-container">
+                    <span class="tag" contenteditable="true">英语专业四级 (TEM-4)</span>
+                    <span class="tag" contenteditable="true">大学英语六级 (CET-6)</span>
+                    <span class="tag" contenteditable="true">大学英语四级 (CET-4)</span>
+                    <span class="tag" contenteditable="true">全国计算机等级二级</span>
+                    <span class="tag" contenteditable="true">C1机动车驾驶证</span>
+                    <span class="tag" contenteditable="true">WorkBuddy跨境电商实训营铜牌团队/最佳案例奖</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">个人总结</div>
+                <div class="summary-text" contenteditable="true">
+                    英语专业在读本科生，拥有完整跨境电商项目实战经验，深度参与选品调研、客户开发、英文询盘对接、商务报价谈判、订单跟进转化整套外贸基础业务流程；英语读写听说能力扎实，熟练使用Office全套办公软件；具备优秀沟通协调、快速学习落地、团队协作抗压能力，能够快速适配外贸业务员实习岗位日常工作要求。
+                </div>
+            </div>
         </div>
-        <div class="intention">
-          <span><strong>求职意向：</strong>外贸业务员 / 跨境电商实习生</span>
-          <span><strong>求职类型：</strong>实习</span>
-        </div>
-      </div>
-      <div class="avatar-placeholder">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-        </svg>
-      </div>
-    </header>
+    </div>
 
-    <section class="section">
-      <div class="section-title">
-        <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
-        教育经历
-      </div>
-      <div class="item">
-        <div class="item-header">
-          <span>吉首大学张家界学院 <span class="item-sub">| 英语 | 本科（全日制）</span></span>
-          <span class="date">2023.09 - 2027.06</span>
-        </div>
-        <ul class="bullet-list">
-          <li>专业成绩排名年级前 15%，在校期间连续 2 年获得校级奖学金。</li>
-          <li>主修英语核心专业课程，夯实听说读写译综合语言能力。</li>
-          <li>在校期间考取英语专业四级、大学英语四级、大学英语六级证书。</li>
-        </ul>
-      </div>
-    </section>
+    <script>
+        // 照片上传、裁切缩放与拖拽逻辑
+        const fileInput = document.getElementById('file-input');
+        const img = document.getElementById('userPhoto');
+        const wrapper = document.getElementById('photoWrapper');
+        const placeholder = document.getElementById('uploadPlaceholder');
+        const controls = document.getElementById('photoControls');
+        const zoomSlider = document.getElementById('zoomSlider');
 
-    <section class="section">
-      <div class="section-title">
-        <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
-        项目经历
-      </div>
-      <div class="item">
-        <div class="item-header">
-          <span>WorkBuddy 创业黑客松实训营 <span class="item-sub">| FiveSpark 团队成员</span></span>
-          <span class="date">2026.07</span>
-        </div>
-        <ul class="bullet-list">
-          <li>参与跨境电商完整业务全流程实训，完成产品选品、海外市场分析、客户开发、询盘回复、报价谈判与模拟订单成交全环节实操。</li>
-          <li>团队整体积分排名第五，斩获“铜牌团队”荣誉，个人参与项目获评实训营“最佳案例奖”。</li>
-          <li>熟练掌握外贸客户英文沟通、报价定价策略、订单跟进转化的基础业务方法。</li>
-        </ul>
-      </div>
-    </section>
+        let scale = 1;
+        let posX = 0;
+        let posY = 0;
+        let isDragging = false;
+        let startX, startY;
 
-    <section class="section">
-      <div class="section-title">
-        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-        在校经历
-      </div>
-      
-      <div class="item">
-        <div class="item-header">
-          <span>张家界武陵源马拉松 <span class="item-sub">| 赛事志愿者</span></span>
-          <span class="date">2024.04</span>
-        </div>
-        <ul class="bullet-list">
-          <li>对接千余名参赛选手，负责路线指引、物资分挑派发、现场秩序维护工作。</li>
-          <li>全程零失误保障赛事正常落地，获评优秀志愿者并获得官方认证证书。</li>
-        </ul>
-      </div>
+        function triggerUpload() {
+            fileInput.click();
+        }
 
-      <div class="item">
-        <div class="item-header">
-          <span>社区志愿者服务 <span class="item-sub">| 志愿者</span></span>
-          <span class="date">2024.01 - 2024.02</span>
-        </div>
-        <ul class="bullet-list">
-          <li>日均接待 50+ 人次居民咨询，完成 100 余份居民档案资料规整归档。</li>
-          <li>梳理输出标准化办公会务文档，整体办公事务处理效率提升 50%。</li>
-        </ul>
-      </div>
+        function handlePhotoUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    img.src = evt.target.result;
+                    wrapper.style.display = 'block';
+                    placeholder.style.display = 'none';
+                    controls.style.display = 'flex';
+                    resetImagePosition();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
 
-      <div class="item">
-        <div class="item-header">
-          <span>朋辈心理互助会 <span class="item-sub">| 干事（文宣部）</span></span>
-          <span class="date">2023.10 - 2024.09</span>
-        </div>
-        <ul class="bullet-list">
-          <li>独立策划落地 5 场校园主题活动，覆盖在校学生 500 余人。</li>
-          <li>累计参与 5 次线下志愿落地工作，获评社团年度优秀干事，锻炼统筹规划与抗压能力。</li>
-        </ul>
-      </div>
-    </section>
+        function removePhoto() {
+            img.src = '';
+            wrapper.style.display = 'none';
+            placeholder.style.display = 'block';
+            controls.style.display = 'none';
+            fileInput.value = '';
+        }
 
-    <section class="section">
-      <div class="section-title">
-        <svg viewBox="0 0 24 24"><path d="M12 1L9 9l-8 1 6 5.5L5.5 23 12 19l6.5 4-1.5-7.5L23 10l-8-1z"/></svg>
-        荣誉证书
-      </div>
-      <p class="text-block">
-        英语专业四级 (TEM-4)、大学英语六级 (CET-6)、大学英语四级 (CET-4)、全国计算机等级二级、C1 机动车驾驶证、WorkBuddy 跨境电商实训营铜牌团队 / 最佳案例奖
-      </p>
-    </section>
+        function resetImagePosition() {
+            scale = 1;
+            posX = 0;
+            posY = 0;
+            zoomSlider.value = 1;
+            updateImageTransform();
+        }
 
-    <section class="section">
-      <div class="section-title">
-        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-        个人总结
-      </div>
-      <p class="text-block">
-        英语专业在读本科生，拥有完整跨境电商项目实战经验，深度参与选品调研、客户开发、英文询盘对接、商务报价谈判、订单跟进转化整套外贸基础业务流程；英语读写听说能力扎实，熟练使用 Office 全套办公软件；具备优秀沟通协调、快速学习落地、团队协作抗压能力，能够快速适配外贸业务员实习岗位日常工作要求。
-      </p>
-    </section>
+        function updateImageTransform() {
+            img.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
+        }
 
-  </div>
+        zoomSlider.addEventListener('input', (e) => {
+            scale = parseFloat(e.target.value);
+            updateImageTransform();
+        });
 
+        // 拖拽平移图片
+        wrapper.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX - posX;
+            startY = e.clientY - posY;
+            wrapper.style.cursor = 'grabbing';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            posX = e.clientX - startX;
+            posY = e.clientY - startY;
+            updateImageTransform();
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+            if(wrapper) wrapper.style.cursor = 'grab';
+        });
+
+        // PDF 导出功能
+        function exportToPDF() {
+            const element = document.getElementById('resume');
+            const opt = {
+                margin:       0,
+                filename:     '王璐瑶_英语_简历.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
 </body>
 </html>
