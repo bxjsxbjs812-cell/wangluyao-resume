@@ -63,7 +63,7 @@
             background-color: #13426b;
         }
 
-        /* A4 简历画布容器（优化垂直填充与边距，解决底部留空） */
+        /* A4 简历画布容器 */
         .resume-page {
             width: 210mm;
             min-height: 297mm;
@@ -131,6 +131,12 @@
             flex-shrink: 0;
         }
 
+        /* 导出 PDF 时消除虚线框 */
+        .photo-container.no-border {
+            border: none !important;
+            background: transparent !important;
+        }
+
         .photo-wrapper {
             width: 100%;
             height: 100%;
@@ -187,7 +193,7 @@
             display: none;
         }
 
-        /* 通用模块样式（增加下边距） */
+        /* 通用模块样式 */
         .section {
             margin-bottom: 16px;
         }
@@ -272,7 +278,7 @@
                 display: none !important;
             }
             .photo-container {
-                border: none;
+                border: none !important;
             }
         }
     </style>
@@ -281,7 +287,7 @@
 
     <!-- 顶栏操作区 -->
     <div class="toolbar" data-html2pdf-ignore="true">
-        <h2>简历编辑器（已自动充实页面）</h2>
+        <h2>简历编辑器</h2>
         <button class="btn" onclick="exportToPDF()">下载导出 PDF (单页 A4)</button>
     </div>
 
@@ -425,6 +431,7 @@
         const placeholder = document.getElementById('uploadPlaceholder');
         const controls = document.getElementById('photoControls');
         const zoomSlider = document.getElementById('zoomSlider');
+        const photoContainer = document.getElementById('photoContainer');
 
         let scale = 1;
         let posX = 0;
@@ -495,7 +502,10 @@
             if(wrapper) wrapper.style.cursor = 'grab';
         });
 
+        // 导出 PDF 时动态隐藏虚线边框
         function exportToPDF() {
+            photoContainer.classList.add('no-border');
+            
             const element = document.getElementById('resume');
             const opt = {
                 margin:       0,
@@ -505,7 +515,9 @@
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            html2pdf().set(opt).from(element).save();
+            html2pdf().set(opt).from(element).save().then(() => {
+                photoContainer.classList.remove('no-border');
+            });
         }
     </script>
 </body>
