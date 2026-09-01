@@ -20,6 +20,7 @@
       box-sizing: border-box;
       position: relative;
       overflow: hidden;
+      /* ❗删掉flex justify‑between，这就是大片空白元凶！改用普通文档流 */
       padding: 20mm 16mm;
       font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
     }
@@ -39,17 +40,17 @@
         height: 297mm;
       }
     }
-    /* 强制简历内所有可编辑文字统一字号行高，根治局部字体变大 */
-    .a4-page [contenteditable="true"] {
+
+    [contenteditable="true"] {
       font-family: inherit !important;
-      font-size: 12px !important;
-      line-height: 1.45 !important;
+      font-size: inherit !important;
+      line-height: inherit !important;
     }
 
-    .a4-page [contenteditable="true"] * {
+    [contenteditable="true"] * {
       font-family: inherit !important;
-      font-size: 12px !important;
-      line-height: 1.45 !important;
+      font-size: inherit !important;
+      line-height: inherit !important;
     }
 
     [contenteditable="true"]:hover {
