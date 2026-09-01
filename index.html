@@ -23,7 +23,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft YaHei", sans-serif;
             background-color: #eef2f5;
             color: var(--text-color);
-            line-height: 1.45;
+            line-height: 1.55;
             padding-bottom: 30px;
         }
 
@@ -63,19 +63,16 @@
             background-color: #13426b;
         }
 
-        /* A4 简历画布容器 */
+        /* A4 简历画布容器（优化垂直填充与边距，解决底部留空） */
         .resume-page {
             width: 210mm;
-            height: 296mm;
-            padding: 12mm 15mm;
+            min-height: 297mm;
+            padding: 18mm 18mm 15mm 18mm;
             margin: 0 auto;
             background: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.05);
             position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            box-sizing: border-box;
         }
 
         /* 头部基本信息 */
@@ -83,8 +80,8 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
             border-bottom: 2px solid var(--primary-color);
         }
 
@@ -94,17 +91,17 @@
         }
 
         .name {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: bold;
             color: var(--primary-color);
-            margin-bottom: 6px;
+            margin-bottom: 10px;
             outline: none;
         }
 
         .info-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 4px 10px;
+            gap: 6px 15px;
             font-size: 13.5px;
         }
 
@@ -119,7 +116,7 @@
             margin-right: 4px;
         }
 
-        /* 证件照组件修复：保证图片导入居中全显 */
+        /* 证件照组件 */
         .photo-container {
             width: 100px;
             height: 130px;
@@ -190,27 +187,27 @@
             display: none;
         }
 
-        /* 通用模块样式 */
+        /* 通用模块样式（增加下边距） */
         .section {
-            margin-bottom: 10px;
+            margin-bottom: 16px;
         }
 
         .section-title {
-            font-size: 14.5px;
+            font-size: 15px;
             font-weight: bold;
             color: var(--primary-color);
             border-left: 3.5px solid var(--primary-color);
-            padding-left: 6px;
-            margin-bottom: 6px;
+            padding-left: 8px;
+            margin-bottom: 8px;
         }
 
-        /* 严格三列居中排版 (左侧单位 | 绝对居中职位 | 右侧时间) */
+        /* 三列对齐 (左侧单位 | 绝对居中职位 | 右侧时间) */
         .item-header-3col {
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 13.5px;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
             position: relative;
         }
 
@@ -235,25 +232,25 @@
         }
 
         ul.bullets {
-            padding-left: 16px;
-            font-size: 12.5px;
+            padding-left: 18px;
+            font-size: 13px;
             color: #333;
         }
 
         ul.bullets li {
-            margin-bottom: 2px;
-            line-height: 1.4;
+            margin-bottom: 3px;
+            line-height: 1.5;
         }
 
         .cert-list {
-            font-size: 12.5px;
-            line-height: 1.6;
+            font-size: 13px;
+            line-height: 1.65;
             color: #333;
         }
 
         .summary-text {
-            font-size: 12.5px;
-            line-height: 1.5;
+            font-size: 13px;
+            line-height: 1.6;
             color: #333;
             text-align: justify;
         }
@@ -268,9 +265,8 @@
             }
             .resume-page {
                 box-shadow: none;
-                padding: 10mm 12mm;
+                padding: 15mm 15mm;
                 width: 100%;
-                height: 100vh;
             }
             .photo-controls {
                 display: none !important;
@@ -285,7 +281,7 @@
 
     <!-- 顶栏操作区 -->
     <div class="toolbar" data-html2pdf-ignore="true">
-        <h2>简历编辑器（支持编辑修改）</h2>
+        <h2>简历编辑器（已自动充实页面）</h2>
         <button class="btn" onclick="exportToPDF()">下载导出 PDF (单页 A4)</button>
     </div>
 
@@ -366,7 +362,7 @@
             <div class="section">
                 <div class="section-title">在校经历</div>
                 
-                <div style="margin-bottom: 6px;">
+                <div style="margin-bottom: 10px;">
                     <div class="item-header-3col">
                         <div class="col-left" contenteditable="true">张家界武陵源马拉松</div>
                         <div class="col-center" contenteditable="true">赛事志愿者</div>
@@ -378,7 +374,7 @@
                     </ul>
                 </div>
 
-                <div style="margin-bottom: 6px;">
+                <div style="margin-bottom: 10px;">
                     <div class="item-header-3col">
                         <div class="col-left" contenteditable="true">社区志愿服务</div>
                         <div class="col-center" contenteditable="true">志愿者</div>
