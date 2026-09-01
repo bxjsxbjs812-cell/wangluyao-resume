@@ -63,22 +63,22 @@
             background-color: #13426b;
         }
 
-        /* A4 简历画布容器（严格控制高度与内边距以保证1页A4） */
+        /* A4 简历画布容器 */
         .resume-page {
             width: 210mm;
-            height: 296mm; /* 稍小于 297mm，防临界点溢出 */
+            height: 296mm;
             padding: 12mm 15mm;
             margin: 0 auto;
             background: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.05);
             position: relative;
-            overflow: hidden; /* 防止内容超出引发出第二页 */
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        /* 头部：基本信息与证件照 */
+        /* 头部基本信息 */
         .header-section {
             display: flex;
             justify-content: space-between;
@@ -105,7 +105,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 4px 10px;
-            font-size: 13px;
+            font-size: 13.5px;
         }
 
         .info-item {
@@ -119,15 +119,14 @@
             margin-right: 4px;
         }
 
-        /* 证件照组件 */
+        /* 证件照组件修复：保证图片导入居中全显 */
         .photo-container {
-            width: 95px;
-            height: 125px;
+            width: 100px;
+            height: 130px;
             border: 1px dashed #ccc;
             position: relative;
             background: var(--light-bg);
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             overflow: hidden;
@@ -141,9 +140,15 @@
             position: relative;
             cursor: grab;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .photo-wrapper img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
             position: absolute;
             user-select: none;
             transform-origin: center center;
@@ -199,36 +204,34 @@
             margin-bottom: 6px;
         }
 
-        /* 头部三列对齐排版 (左侧名称 | 中间职位 | 右侧时间) */
+        /* 严格三列居中排版 (左侧单位 | 绝对居中职位 | 右侧时间) */
         .item-header-3col {
-            display: grid;
-            grid-template-columns: 2fr 1.5fr 1fr;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
             font-size: 13.5px;
             margin-bottom: 3px;
+            position: relative;
         }
 
         .item-header-3col .col-left {
             font-weight: bold;
             text-align: left;
+            flex: 1;
         }
 
         .item-header-3col .col-center {
             font-weight: bold;
             text-align: center;
             color: #444;
+            flex: 1;
         }
 
         .item-header-3col .col-right {
             font-weight: bold;
             text-align: right;
             color: #333;
-        }
-
-        .item-sub {
-            color: #555;
-            font-size: 12.5px;
-            margin-bottom: 4px;
+            flex: 1;
         }
 
         ul.bullets {
@@ -242,7 +245,6 @@
             line-height: 1.4;
         }
 
-        /* 纯文本证书列表 */
         .cert-list {
             font-size: 12.5px;
             line-height: 1.6;
@@ -256,7 +258,6 @@
             text-align: justify;
         }
 
-        /* 打印与 PDF 导出优化 */
         @media print {
             body {
                 background: white;
@@ -284,7 +285,7 @@
 
     <!-- 顶栏操作区 -->
     <div class="toolbar" data-html2pdf-ignore="true">
-        <h2>简历编辑器（支持编辑内容）</h2>
+        <h2>简历编辑器（支持编辑修改）</h2>
         <button class="btn" onclick="exportToPDF()">下载导出 PDF (单页 A4)</button>
     </div>
 
@@ -402,7 +403,7 @@
                 </div>
             </div>
 
-            <!-- 荣誉证书（纯文本列表格式，字体统一） -->
+            <!-- 荣誉证书 -->
             <div class="section">
                 <div class="section-title">荣誉证书</div>
                 <div class="cert-list" contenteditable="true">
@@ -420,7 +421,7 @@
         </div>
     </div>
 
-    <!-- 交互与逻辑脚本 -->
+    <!-- 脚本逻辑 -->
     <script>
         const fileInput = document.getElementById('file-input');
         const img = document.getElementById('userPhoto');
@@ -445,7 +446,7 @@
                 const reader = new FileReader();
                 reader.onload = function(evt) {
                     img.src = evt.target.result;
-                    wrapper.style.display = 'block';
+                    wrapper.style.display = 'flex';
                     placeholder.style.display = 'none';
                     controls.style.display = 'flex';
                     resetImagePosition();
@@ -498,7 +499,6 @@
             if(wrapper) wrapper.style.cursor = 'grab';
         });
 
-        // 导出 PDF 保证严格单页 A4
         function exportToPDF() {
             const element = document.getElementById('resume');
             const opt = {
