@@ -8,7 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
 
-    <!-- html2canvas + jsPDF 核心依赖库 (用于 Safari 直接下载 PDF 文件) -->
+    <!-- html2canvas + jsPDF 核心依赖库 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -20,17 +20,17 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            color: #333;
-            background-color: #f5f5f7;
-            line-height: 1.4;
-            padding: 15px 0;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: #222;
+            background-color: #f0f2f5;
+            line-height: 1.5;
+            padding: 10px 0;
         }
 
-        /* 顶部操作面板 */
+        /* 顶部操作栏 */
         .toolbar {
-            max-width: 800px;
-            margin: 0 auto 15px auto;
+            max-width: 820px;
+            margin: 0 auto 12px auto;
             padding: 10px 15px;
             background: #fff;
             border-radius: 8px;
@@ -52,56 +52,53 @@
         .tool-title {
             font-size: 15px;
             font-weight: bold;
-            color: #004080;
+            color: #2e265c;
         }
 
         input[type="text"], select {
-            padding: 5px 8px;
+            padding: 6px 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 13px;
             outline: none;
         }
 
-        input[type="text"]:focus, select:focus {
-            border-color: #004080;
-        }
-
         .btn {
-            background-color: #004080;
+            background-color: #2e265c;
             color: white;
             border: none;
-            padding: 6px 12px;
+            padding: 7px 14px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 500;
         }
 
-        .btn:hover { background-color: #003366; }
+        .btn:hover { background-color: #1e1840; }
         .btn-danger { background-color: #d9534f; }
         .btn-warning { background-color: #f0ad4e; }
 
-        /* 简历主容器：严格 A4 比例单页 */
-        .resume-container {
-            width: 210mm;
-            height: 297mm; /* 严格固定单页 A4 高度 */
+        /* 简历容器 */
+        .resume-wrapper {
+            max-width: 820px;
             margin: 0 auto;
-            background: white;
-            padding: 30px 40px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden; /* 防止溢出第二页 */
         }
 
-        /* 头部个人信息 */
+        .resume-container {
+            width: 100%;
+            background: white;
+            padding: 30px 40px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border-radius: 2px;
+        }
+
+        /* 头部样式 */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 12px;
-            border-bottom: 2px solid #004080;
-            padding-bottom: 10px;
+            position: relative;
         }
 
         .header-info {
@@ -109,46 +106,39 @@
         }
 
         .name {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
-            color: #004080;
-            margin-bottom: 8px;
-            letter-spacing: 2px;
+            color: #2e265c;
+            letter-spacing: 4px;
+            margin-bottom: 12px;
         }
 
         .info-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 4px 15px;
-            font-size: 12.5px;
-            color: #444;
+            gap: 6px 20px;
+            font-size: 13.5px;
+            color: #333;
         }
 
-        .info-item span.label {
-            color: #666;
-            display: inline-block;
-            width: 65px;
+        .info-item .label {
+            color: #333;
         }
 
-        .info-item a, .info-item span.phone-text {
-            color: #444 !important;
-            text-decoration: none !important;
-        }
-
-        /* 照片上传区域 */
+        /* 个人照片 */
         .avatar-container {
-            width: 90px;
-            height: 120px;
+            width: 100px;
+            height: 130px;
             border: 1px dashed #ccc;
-            border-radius: 4px;
+            border-radius: 2px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             overflow: hidden;
-            background-color: #fafafa;
-            margin-left: 15px;
+            background-color: #f9f9f9;
+            margin-left: 20px;
             flex-shrink: 0;
         }
 
@@ -159,63 +149,81 @@
         }
 
         .avatar-placeholder {
-            font-size: 11px;
+            font-size: 12px;
             color: #999;
             text-align: center;
-            padding: 5px;
         }
 
-        /* 模块通用样式 */
+        /* 模块标题 (带有紫色背景框和图标) */
         .section {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
-        .section-title {
-            font-size: 14.5px;
+        .section-header-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: #2e265c;
+            color: white;
+            padding: 3px 12px 3px 8px;
+            border-radius: 4px;
+            font-size: 13.5px;
             font-weight: bold;
-            color: #004080;
-            border-left: 3.5px solid #004080;
-            padding-left: 6px;
-            margin-bottom: 6px;
-            line-height: 1.1;
+            margin-bottom: 8px;
         }
 
-        .item-header {
+        .section-header-badge svg {
+            width: 15px;
+            height: 15px;
+            margin-right: 6px;
+            fill: currentColor;
+        }
+
+        /* 经历列表项 */
+        .item-row {
+            margin-bottom: 8px;
+        }
+
+        .item-title-bar {
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
-            font-weight: bold;
-            color: #222;
+            align-items: baseline;
+            font-size: 14px;
             margin-bottom: 2px;
         }
 
-        .item-sub {
+        .item-title-main {
+            font-weight: bold;
+            color: #111;
+        }
+
+        .item-title-sub {
             font-weight: normal;
-            color: #555;
+            color: #444;
+            margin-left: 6px;
         }
 
         .item-date {
-            font-size: 12px;
-            color: #777;
-            font-weight: normal;
+            font-size: 13px;
+            color: #111;
+            font-weight: bold;
         }
 
         .bullet-list {
             list-style-type: disc;
-            padding-left: 16px;
-            font-size: 12px;
-            color: #444;
-            line-height: 1.45;
+            padding-left: 18px;
+            font-size: 12.5px;
+            color: #333;
+            line-height: 1.5;
         }
 
         .bullet-list li {
             margin-bottom: 2px;
         }
 
-        .cert-text {
-            font-size: 12px;
-            color: #444;
-            line-height: 1.5;
+        .cert-text, .summary-text {
+            font-size: 12.5px;
+            color: #333;
+            line-height: 1.6;
         }
 
         /* 裁剪弹窗 */
@@ -254,17 +262,6 @@
             justify-content: flex-end;
             gap: 8px;
         }
-
-        /* iPad / 移动端设备兼容处理 */
-        @media screen and (max-width: 820px) {
-            body { padding: 5px; }
-            .resume-container {
-                width: 100%;
-                height: auto;
-                min-height: 297mm;
-                padding: 20px 15px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -272,12 +269,12 @@
     <!-- 顶部操作控制栏 -->
     <div class="toolbar">
         <div class="toolbar-left">
-            <span class="tool-title">简历在线编辑器</span>
+            <span class="tool-title">简历编辑器</span>
             <button class="btn btn-warning" onclick="restoreOriginal()">恢复原版</button>
             <button class="btn" id="downloadBtn" onclick="downloadPDFDirectly()">直接下载 PDF</button>
         </div>
         <div class="toolbar-right">
-            <input type="text" id="versionName" placeholder="输入版本名 (如: 外贸)">
+            <input type="text" id="versionName" placeholder="输入版本名">
             <button class="btn" onclick="saveVersion()">保存当前版本</button>
             <select id="versionSelect" onchange="loadVersion()">
                 <option value="">-- 选择版本 --</option>
@@ -286,118 +283,163 @@
         </div>
     </div>
 
-    <!-- 简历容器 -->
-    <div class="resume-container" id="resumeBody">
-        <!-- 头部个人信息 -->
-        <div class="header">
-            <div class="header-info">
-                <div class="name" contenteditable="true">王璐瑶</div>
-                <div class="info-grid">
-                    <div class="info-item"><span class="label">意向岗位：</span><span contenteditable="true">外贸业务员 / 跨境电商实习生</span></div>
-                    <div class="info-item"><span class="label">求职类型：</span><span contenteditable="true">实习</span></div>
-                    <div class="info-item"><span class="label">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：</span><span class="phone-text" contenteditable="true">15580163553</span></div>
-                    <div class="info-item"><span class="label">邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱：</span><span contenteditable="true">15580163553@163.com</span></div>
-                    <div class="info-item"><span class="label">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：</span><span contenteditable="true">女</span></div>
-                    <div class="info-item"><span class="label">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄：</span><span contenteditable="true">21</span></div>
-                    <div class="info-item"><span class="label">最高学历：</span><span contenteditable="true">本科</span></div>
-                    <div class="info-item"><span class="label">意向城市：</span><span contenteditable="true">宁波</span></div>
+    <!-- 简历主页面 -->
+    <div class="resume-wrapper">
+        <div class="resume-container" id="resumeBody">
+            <!-- 头部信息 -->
+            <div class="header">
+                <div class="header-info">
+                    <div class="name" contenteditable="true">王璐瑶</div>
+                    <div class="info-grid">
+                        <div class="info-item"><span class="label">电话：</span><span contenteditable="true">15580163553</span></div>
+                        <div class="info-item"><span class="label">邮箱：</span><span contenteditable="true">willow.wly@foxmail.com</span></div>
+                        <div class="info-item"><span class="label">性别：</span><span contenteditable="true">女</span></div>
+                        <div class="info-item"><span class="label">年龄：</span><span contenteditable="true">21</span></div>
+                        <div class="info-item"><span class="label">意向城市：</span><span contenteditable="true">宁波</span></div>
+                        <div class="info-item"><span class="label">最高学历：</span><span contenteditable="true">本科</span></div>
+                    </div>
+                </div>
+                
+                <div class="avatar-container" id="avatarContainer" onclick="document.getElementById('imageInput').click()">
+                    <div class="avatar-placeholder" id="avatarPlaceholder">点击上传照片</div>
+                    <img id="avatarImage" src="" style="display: none;">
+                </div>
+                <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageSelect(event)">
+            </div>
+
+            <hr style="border: none; border-top: 1px solid #ddd; margin: 10px 0 12px 0;">
+
+            <!-- 求职意向 -->
+            <div class="section">
+                <div class="section-header-badge">
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                    求职意向
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 13.5px; padding-left: 2px;">
+                    <div><span style="font-weight: bold;">意向岗位：</span><span contenteditable="true">外贸业务员 / 跨境电商实习生</span></div>
+                    <div><span style="font-weight: bold;">求职类型：</span><span contenteditable="true">实习</span></div>
                 </div>
             </div>
-            
-            <div class="avatar-container" id="avatarContainer" onclick="document.getElementById('imageInput').click()">
-                <div class="avatar-placeholder" id="avatarPlaceholder">点击上传照片</div>
-                <img id="avatarImage" src="" style="display: none;">
-            </div>
-            <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageSelect(event)">
-        </div>
 
-        <!-- 教育经历 -->
-        <div class="section">
-            <div class="section-title">教育经历</div>
-            <div class="section-content">
-                <div class="item-header">
-                    <span><span contenteditable="true">吉首大学张家界学院</span> <span class="item-sub" contenteditable="true">| 英语 | 本科 (全日制)</span></span>
-                    <span class="item-date" contenteditable="true">2023.09 - 2027.06</span>
+            <!-- 教育经历 -->
+            <div class="section">
+                <div class="section-header-badge">
+                    <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+                    教育经历
                 </div>
-                <ul class="bullet-list">
-                    <li contenteditable="true">专业成绩排名年级前 15%，在校期间连续 2 年获得校级奖学金。</li>
-                    <li contenteditable="true">主修英语核心专业课程，夯实听说读写译综合语言能力。</li>
-                    <li contenteditable="true">在校期间考取英语专业四级、大学英语四级、大学英语六级证书。</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- 项目经历 -->
-        <div class="section">
-            <div class="section-title">项目经历</div>
-            <div class="section-content">
-                <div class="item-header">
-                    <span><span contenteditable="true">WorkBuddy 创业黑客松实训营</span> <span class="item-sub" contenteditable="true">| FiveSpark 团队成员</span></span>
-                    <span class="item-date" contenteditable="true">2026.07</span>
+                <div class="item-row">
+                    <div class="item-title-bar">
+                        <div>
+                            <span class="item-title-main" contenteditable="true">吉首大学张家界学院</span>
+                            <span class="item-title-sub" contenteditable="true">英语 | 本科 (全日制)</span>
+                        </div>
+                        <span class="item-date" contenteditable="true">2023.09 - 2027.06</span>
+                    </div>
+                    <ul class="bullet-list">
+                        <li contenteditable="true">专业成绩排名年级前15%，在校期间连续2年获得校级奖学金。</li>
+                        <li contenteditable="true">主修英语核心专业课程，夯实听说读写译综合语言能力。</li>
+                        <li contenteditable="true">在校期间考取英语专业四级、大学英语四级、大学英语六级证书。</li>
+                    </ul>
                 </div>
-                <ul class="bullet-list">
-                    <li contenteditable="true">参与跨境电商完整业务全流程实训，完成产品选品、海外市场分析、客户开发、询盘回复、报价谈判与模拟订单成交全环节实操。</li>
-                    <li contenteditable="true">团队整体积分排名第五，斩获“铜牌团队”荣誉，个人参与项目获评实训营“最佳案例奖”。</li>
-                    <li contenteditable="true">熟练掌握外贸客户英文沟通、报价定价策略、订单跟进转化的基础业务方法。</li>
-                </ul>
             </div>
-        </div>
 
-        <!-- 在校经历 -->
-        <div class="section">
-            <div class="section-title">在校经历</div>
-            <div class="section-content" style="margin-bottom: 6px;">
-                <div class="item-header">
-                    <span><span contenteditable="true">张家界武陵源马拉松</span> <span class="item-sub" contenteditable="true">| 赛事志愿者</span></span>
-                    <span class="item-date" contenteditable="true">2024.04</span>
+            <!-- 项目经历 -->
+            <div class="section">
+                <div class="section-header-badge">
+                    <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
+                    项目经历
                 </div>
-                <ul class="bullet-list">
-                    <li contenteditable="true">对接百余名参赛选手，负责路线指引、物资分挑派发、现场秩序维护工作。</li>
-                    <li contenteditable="true">全程零失误保障赛事正常落地，获评优秀志愿者并获得官方认证证书。</li>
-                </ul>
-            </div>
-
-            <div class="section-content" style="margin-bottom: 6px;">
-                <div class="item-header">
-                    <span><span contenteditable="true">社区志愿服务</span> <span class="item-sub" contenteditable="true">| 志愿者</span></span>
-                    <span class="item-date" contenteditable="true">2024.01 - 2024.02</span>
+                <div class="item-row">
+                    <div class="item-title-bar">
+                        <div>
+                            <span class="item-title-main" contenteditable="true">WorkBuddy创业黑客松实训营</span>
+                            <span class="item-title-sub" contenteditable="true">FiveSpark团队成员</span>
+                        </div>
+                        <span class="item-date" contenteditable="true">2026.07</span>
+                    </div>
+                    <ul class="bullet-list">
+                        <li contenteditable="true">参与跨境电商完整业务全流程实训，完成产品选品、海外市场分析、客户开发、询盘回复、报价谈判与模拟订单成交全环节实操。</li>
+                        <li contenteditable="true">团队整体积分排名第五，斩获“铜牌团队”荣誉，个人参与项目获评实训营“最佳案例奖”。</li>
+                        <li contenteditable="true">熟练掌握外贸客户英文沟通、报价定价策略、订单跟进转化的基础业务方法。</li>
+                    </ul>
                 </div>
-                <ul class="bullet-list">
-                    <li contenteditable="true">日均接待 10+ 人次居民咨询，完成 100 余份居民档案资料规整归档，文档处理效率提升 50%。</li>
-                </ul>
             </div>
 
-            <div class="section-content">
-                <div class="item-header">
-                    <span><span contenteditable="true">朋辈心理互助会</span> <span class="item-sub" contenteditable="true">| 干事 (文宣部)</span></span>
-                    <span class="item-date" contenteditable="true">2023.10 - 2024.09</span>
+            <!-- 在校经历 -->
+            <div class="section">
+                <div class="section-header-badge">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    在校经历
                 </div>
-                <ul class="bullet-list">
-                    <li contenteditable="true">独立策划落地 5 场校园主题活动，覆盖 500 余人；获评社团年度优秀干事。</li>
-                </ul>
-            </div>
-        </div>
+                <div class="item-row">
+                    <div class="item-title-bar">
+                        <div>
+                            <span class="item-title-main" contenteditable="true">张家界武陵源马拉松</span>
+                            <span class="item-title-sub" contenteditable="true">赛事志愿者</span>
+                        </div>
+                        <span class="item-date" contenteditable="true">2024.04</span>
+                    </div>
+                    <ul class="bullet-list">
+                        <li contenteditable="true">对接千余名参赛选手，负责路线指引、物资分挑派发、现场秩序维护工作。</li>
+                        <li contenteditable="true">全程零失误保障赛事正常落地，获评优秀志愿者并获得官方认证证书。</li>
+                    </ul>
+                </div>
 
-        <!-- 荣誉证书 -->
-        <div class="section">
-            <div class="section-title">荣誉证书</div>
-            <div class="section-content">
-                <div class="cert-text" contenteditable="true">英语专业四级 (TEM-4)&nbsp;&nbsp;|&nbsp;&nbsp;大学英语六级 (CET-6)&nbsp;&nbsp;|&nbsp;&nbsp;大学英语四级 (CET-4)&nbsp;&nbsp;|&nbsp;&nbsp;全国计算机等级二级&nbsp;&nbsp;|&nbsp;&nbsp;WorkBuddy 跨境电商实训营铜牌团队 / 最佳案例奖&nbsp;&nbsp;|&nbsp;&nbsp;阿里巴巴国际站操盘官证书&nbsp;&nbsp;|&nbsp;&nbsp;C1 机动车驾驶证</div>
-            </div>
-        </div>
+                <div class="item-row">
+                    <div class="item-title-bar">
+                        <div>
+                            <span class="item-title-main" contenteditable="true">社区志愿服务</span>
+                            <span class="item-title-sub" contenteditable="true">志愿者</span>
+                        </div>
+                        <span class="item-date" contenteditable="true">2024.01 - 2024.02</span>
+                    </div>
+                    <ul class="bullet-list">
+                        <li contenteditable="true">日均接待50+人次居民咨询，完成100余份居民档案资料规整归档。</li>
+                        <li contenteditable="true">梳理输出标准化办公公务文档，整体办公事务处理效率提升50%。</li>
+                    </ul>
+                </div>
 
-        <!-- 个人总结 -->
-        <div class="section">
-            <div class="section-title">个人总结</div>
-            <div class="section-content">
-                <p contenteditable="true" style="font-size: 12px; color: #444; line-height: 1.5; text-align: justify;">
-                    英语专业本科在读，具备跨境电商项目实战经验，熟悉选品、客户开发、英文询盘、报价谈判与跟单流程；英语听说读写能力扎实，熟练使用 Office 办公软件，具备优秀的沟通协调和快速落地执行能力。
-                </p>
+                <div class="item-row">
+                    <div class="item-title-bar">
+                        <div>
+                            <span class="item-title-main" contenteditable="true">朋辈心理互助会</span>
+                            <span class="item-title-sub" contenteditable="true">干事 (文宣部)</span>
+                        </div>
+                        <span class="item-date" contenteditable="true">2023.10 - 2024.09</span>
+                    </div>
+                    <ul class="bullet-list">
+                        <li contenteditable="true">独立策划落地5场校园主题活动，覆盖在校学生500余人。</li>
+                        <li contenteditable="true">累计参与5次线下志愿落地工作，获评社团年度优秀干事，锻炼统筹规划与抗压能力。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 荣誉证书 -->
+            <div class="section">
+                <div class="section-header-badge">
+                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                    荣誉证书
+                </div>
+                <div class="cert-text" contenteditable="true">
+                    • 英语专业四级 (TEM-4) &nbsp;&nbsp;&nbsp;&nbsp; • 大学英语六级 (CET-6) &nbsp;&nbsp;&nbsp;&nbsp; • 大学英语四级 (CET-4) &nbsp;&nbsp;&nbsp;&nbsp; • 全国计算机等级二级<br>
+                    • C1机动车驾驶证 &nbsp;&nbsp;&nbsp;&nbsp; • WorkBuddy跨境电商实训营铜牌团队 / 最佳案例奖
+                </div>
+            </div>
+
+            <!-- 个人总结 -->
+            <div class="section">
+                <div class="section-header-badge">
+                    <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                    个人总结
+                </div>
+                <div class="summary-text" contenteditable="true" style="text-align: justify;">
+                    英语专业在读本科生，拥有完整跨境电商项目实战经验，深度参与选品调研、客户开发、英文询盘对接、商务报价谈判、订单跟进转化等整套外贸基础业务流程；英语听说读写能力扎实，熟练使用Office全套办公软件；具备优秀沟通协调、快速学习落地、团队协作抗压能力，能够快速适配外贸业务员实习岗位日常工作要求。
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- 图片裁剪 Modal -->
+    <!-- 裁剪 modal -->
     <div id="cropperModal" class="modal">
         <div class="modal-content">
             <h3 style="margin-bottom: 10px; font-size: 14px;">调整 / 裁剪照片</h3>
@@ -420,16 +462,17 @@
             updateVersionSelect();
         };
 
-        // Safari 专属：绕过打印弹窗，直接触发文件下载
         async function downloadPDFDirectly() {
             const btn = document.getElementById('downloadBtn');
             const element = document.getElementById('resumeBody');
             
-            btn.innerText = '正在生成...';
+            btn.innerText = '正在导出...';
             btn.disabled = true;
 
+            const originalWidth = element.style.width;
+            element.style.width = '794px'; // 强行拉伸至 A4 像素比例渲染
+
             try {
-                // 1. 渲染为 Canvas 画布（高清 2 倍 DPI）
                 const canvas = await html2canvas(element, {
                     scale: 2,
                     useCORS: true,
@@ -437,16 +480,14 @@
                     backgroundColor: '#ffffff'
                 });
 
-                // 2. 创建精准 A4 比例的 jsPDF 对象
+                element.style.width = originalWidth;
+
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('p', 'mm', 'a4');
-                
                 const imgData = canvas.toDataURL('image/jpeg', 1.0);
                 
-                // A4 标准尺寸 210mm x 297mm
                 pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
 
-                // 3. 转为 Blob 二进制流直接调起 Safari 原生文件下载
                 const pdfBlob = pdf.output('blob');
                 const blobUrl = URL.createObjectURL(pdfBlob);
 
@@ -459,6 +500,7 @@
                 URL.revokeObjectURL(blobUrl);
 
             } catch (error) {
+                element.style.width = originalWidth;
                 alert('生成失败，请重试');
                 console.error(error);
             } finally {
@@ -467,7 +509,6 @@
             }
         }
 
-        // 图片裁剪逻辑
         function handleImageSelect(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -476,17 +517,9 @@
             reader.onload = function(event) {
                 const img = document.getElementById('imageToCrop');
                 img.src = event.target.result;
-                
                 document.getElementById('cropperModal').style.display = 'flex';
-                
-                if (cropper) {
-                    cropper.destroy();
-                }
-                
-                cropper = new Cropper(img, {
-                    aspectRatio: 3 / 4,
-                    viewMode: 1
-                });
+                if (cropper) cropper.destroy();
+                cropper = new Cropper(img, { aspectRatio: 3 / 4, viewMode: 1 });
             };
             reader.readAsDataURL(file);
             e.target.value = '';
@@ -494,28 +527,19 @@
 
         function closeModal() {
             document.getElementById('cropperModal').style.display = 'none';
-            if (cropper) {
-                cropper.destroy();
-                cropper = null;
-            }
+            if (cropper) { cropper.destroy(); cropper = null; }
         }
 
         function cropImage() {
             if (!cropper) return;
-            const canvas = cropper.getCroppedCanvas({
-                width: 300,
-                height: 400
-            });
-            
+            const canvas = cropper.getCroppedCanvas({ width: 300, height: 400 });
             const avatarImg = document.getElementById('avatarImage');
             avatarImg.src = canvas.toDataURL('image/jpeg');
             avatarImg.style.display = 'block';
             document.getElementById('avatarPlaceholder').style.display = 'none';
-            
             closeModal();
         }
 
-        // 多版本本地存储与管理逻辑 (LocalStorage)
         function getSavedVersions() {
             const versions = localStorage.getItem('resumeVersions');
             return versions ? JSON.parse(versions) : {};
@@ -536,10 +560,7 @@
         function saveVersion() {
             const nameInput = document.getElementById('versionName');
             const name = nameInput.value.trim();
-            if (!name) {
-                alert('请输入版本名称');
-                return;
-            }
+            if (!name) { alert('请输入版本名称'); return; }
             const versions = getSavedVersions();
             versions[name] = document.getElementById('resumeBody').innerHTML;
             localStorage.setItem('resumeVersions', JSON.stringify(versions));
@@ -554,18 +575,13 @@
             const name = select.value;
             if (!name) return;
             const versions = getSavedVersions();
-            if (versions[name]) {
-                document.getElementById('resumeBody').innerHTML = versions[name];
-            }
+            if (versions[name]) { document.getElementById('resumeBody').innerHTML = versions[name]; }
         }
 
         function deleteVersion() {
             const select = document.getElementById('versionSelect');
             const name = select.value;
-            if (!name) {
-                alert('请先选择要删除的版本');
-                return;
-            }
+            if (!name) { alert('请先选择要删除的版本'); return; }
             if (confirm(`确定要删除版本 "${name}" 吗？`)) {
                 const versions = getSavedVersions();
                 delete versions[name];
