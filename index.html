@@ -36,6 +36,14 @@
       }
     }
 
+    /* 强制编辑区域内文字保持全局统一字体 */
+    [contenteditable="true"] {
+      font-family: inherit !important;
+    }
+    [contenteditable="true"] * {
+      font-family: inherit !important;
+    }
+
     [contenteditable="true"]:hover {
       outline: 1px dashed #3b82f6;
       background-color: rgba(59, 130, 246, 0.03);
@@ -201,23 +209,23 @@
           </div>
         </section>
 
-        <!-- 荣誉证书（纯文本，无边框） -->
+        <!-- 荣誉证书（纯文本，统一字体） -->
         <section class="mb-7">
           <h2 class="section-title text-[15px] font-bold pb-1.5 mb-2.5 flex items-center gap-2">
             <i class="fa-solid fa-award text-sm"></i> 荣誉证书
           </h2>
           <div class="text-[13px] text-gray-700 leading-relaxed" contenteditable="true">
-            英语专业四级 (TEM-4) 、 大学英语六级 (CET-6) 、 大学英语四级 (CET-4) 、 全国计算机等级二级 、 C1 机动车驾驶证 、 WorkBuddy 跨境电商实训营铜牌团队 / 最佳案例奖
+            英语专业四级 (TEM-4)、大学英语六级 (CET-6)、大学英语四级 (CET-4)、全国计算机等级二级、C1 机动车驾驶证、WorkBuddy 跨境电商实训营铜牌团队 / 最佳案例奖
           </div>
         </section>
       </div>
 
-      <!-- 个人总结 -->
+      <!-- 个人总结（无边框背景纯文本） -->
       <section class="mt-2">
         <h2 class="section-title text-[15px] font-bold pb-1.5 mb-2.5 flex items-center gap-2">
           <i class="fa-solid fa-user-check text-sm"></i> 个人总结
         </h2>
-        <p class="text-[13px] text-gray-700 leading-relaxed bg-slate-50 p-3.5 rounded border border-slate-100" contenteditable="true">
+        <p class="text-[13px] text-gray-700 leading-relaxed" contenteditable="true">
           英语专业在读本科生，拥有完整跨境电商项目实战经验，深度参与选品调研、客户开发、英文询盘对接、商务报价谈判、订单跟进转化整套外贸基础业务流程；英语读写听说能力扎实，熟练使用 Office 全套办公软件；具备优秀沟通协调、快速学习落地、团队协作抗压能力，能够快速适配外贸业务员实习岗位日常工作要求。
         </p>
       </section>
