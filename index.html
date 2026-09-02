@@ -36,7 +36,9 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             padding: 10px 20px;
             display: flex;
-            justify-content: space-between;
+            gap:10px;
+            flex-wrap:wrap;
+            justify-content: center;
             align-items: center;
             max-width: 210mm;
             margin: 0 auto 15px auto;
@@ -46,6 +48,7 @@
         .toolbar h2 {
             font-size: 15px;
             color: var(--primary-color);
+            margin-right:10px;
         }
 
         .btn {
@@ -58,9 +61,15 @@
             cursor: pointer;
             font-weight: bold;
         }
+        .btn.btn-secondary{
+            background:#557799;
+        }
 
         .btn:hover {
             background-color: #13426b;
+        }
+        .btn.btn-secondary:hover{
+            background:#446280;
         }
 
         /* A4 简历画布容器 */
@@ -197,6 +206,15 @@
         .section {
             margin-bottom: 16px;
         }
+        .section-header-row{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .add-item-btn{
+            font-size:11px;
+            padding:2px 6px;
+        }
 
         .section-title {
             font-size: 15px;
@@ -235,6 +253,22 @@
             text-align: right;
             color: #333;
             flex: 1;
+        }
+        .resume-item-wrap{
+            position:relative;
+            margin-bottom:10px;
+        }
+        .del-item{
+            position:absolute;
+            right:-22px;
+            top:2px;
+            font-size:10px;
+            color:#d03030;
+            cursor:pointer;
+            display:none;
+        }
+        .resume-item-wrap:hover .del-item{
+            display:block;
         }
 
         ul.bullets {
@@ -280,6 +314,23 @@
             .photo-container {
                 border: none !important;
             }
+            .del-item{
+                display:none !important;
+            }
+        }
+        /* 小屏幕适配 */
+        @media (max-width:768px){
+            .resume-page{
+                width:100%;
+                padding:10mm;
+            }
+            .header-section{
+                flex-direction:column;
+            }
+            .photo-container{
+                margin-top:12px;
+                align-self:center;
+            }
         }
     </style>
 </head>
@@ -289,6 +340,8 @@
     <div class="toolbar" data-html2pdf-ignore="true">
         <h2>简历编辑器</h2>
         <button class="btn" onclick="exportToPDF()">下载导出 PDF (单页 A4)</button>
+        <button class="btn btn-secondary" onclick="saveLocal()">本地保存</button>
+        <button class="btn btn-secondary" onclick="clearStorage()">清空本地缓存</button>
     </div>
 
     <!-- 简历主画布 -->
@@ -336,72 +389,93 @@
 
             <!-- 教育经历 -->
             <div class="section">
-                <div class="section-title">教育经历</div>
-                <div class="item-header-3col">
-                    <div class="col-left" contenteditable="true">吉首大学张家界学院</div>
-                    <div class="col-center" contenteditable="true">英语 | 本科(全日制)</div>
-                    <div class="col-right" contenteditable="true">2023.09 - 2027.06</div>
+                <div class="section-header-row">
+                    <div class="section-title">教育经历</div>
+                    <button class="btn add-item-btn" onclick="addEduItem()">+新增教育</button>
                 </div>
-                <ul class="bullets">
-                    <li contenteditable="true">专业成绩排名年级前15%，在校期间连续2年获得校级奖学金。</li>
-                    <li contenteditable="true">主修英语核心专业课程，夯实听说读写译综合语言能力。</li>
-                    <li contenteditable="true">在校期间考取英语专业四级、大学英语四级、大学英语六级证书。</li>
-                </ul>
+                <div id="eduWrap">
+                    <div class="resume-item-wrap">
+                        <span class="del-item" onclick="delItem(this)">删除</span>
+                        <div class="item-header-3col">
+                            <div class="col-left" contenteditable="true">吉首大学张家界学院</div>
+                            <div class="col-center" contenteditable="true">英语 | 本科(全日制)</div>
+                            <div class="col-right" contenteditable="true">2023.09 - 2027.06</div>
+                        </div>
+                        <ul class="bullets">
+                            <li contenteditable="true">专业成绩排名年级前15%，在校期间连续2年获得校级奖学金。</li>
+                            <li contenteditable="true">主修英语核心专业课程，夯实听说读写译综合语言能力。</li>
+                            <li contenteditable="true">在校期间考取英语专业四级、大学英语四级、大学英语六级证书。</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             <!-- 项目经历 -->
             <div class="section">
-                <div class="section-title">项目经历</div>
-                <div class="item-header-3col">
-                    <div class="col-left" contenteditable="true">WorkBuddy创业黑客松实训营</div>
-                    <div class="col-center" contenteditable="true">FiveSpark 团队成员</div>
-                    <div class="col-right" contenteditable="true">2026.07</div>
+                <div class="section-header-row">
+                    <div class="section-title">项目经历</div>
+                    <button class="btn add-item-btn" onclick="addProjectItem()">+新增项目</button>
                 </div>
-                <ul class="bullets">
-                    <li contenteditable="true">参与跨境电商完整业务全流程实训，完成产品选品、海外市场分析、客户开发、询盘回复、报价谈判与模拟订单成交全环节实操。</li>
-                    <li contenteditable="true">团队整体积分排名第五，斩获“铜牌团队”荣誉，个人参与项目获评实训营“最佳案例奖”。</li>
-                    <li contenteditable="true">熟练掌握外贸客户英文沟通、报价定价策略、订单跟进转化的基础业务方法。</li>
-                </ul>
+                <div id="projectWrap">
+                    <div class="resume-item-wrap">
+                        <span class="del-item" onclick="delItem(this)">删除</span>
+                        <div class="item-header-3col">
+                            <div class="col-left" contenteditable="true">WorkBuddy创业黑客松实训营</div>
+                            <div class="col-center" contenteditable="true">FiveSpark 团队成员</div>
+                            <div class="col-right" contenteditable="true">2026.07</div>
+                        </div>
+                        <ul class="bullets">
+                            <li contenteditable="true">参与跨境电商完整业务全流程实训，完成产品选品、海外市场分析、客户开发、询盘回复、报价谈判与模拟订单成交全环节实操。</li>
+                            <li contenteditable="true">团队整体积分排名第五，斩获“铜牌团队”荣誉，个人参与项目获评实训营“最佳案例奖”。</li>
+                            <li contenteditable="true">熟练掌握外贸客户英文沟通、报价定价策略、订单跟进转化的基础业务方法。</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             <!-- 在校经历 -->
             <div class="section">
-                <div class="section-title">在校经历</div>
-                
-                <div style="margin-bottom: 10px;">
-                    <div class="item-header-3col">
-                        <div class="col-left" contenteditable="true">张家界武陵源马拉松</div>
-                        <div class="col-center" contenteditable="true">赛事志愿者</div>
-                        <div class="col-right" contenteditable="true">2024.04</div>
-                    </div>
-                    <ul class="bullets">
-                        <li contenteditable="true">对接千余名参赛选手，负责路线指引、物资分拣派发、现场秩序维护工作。</li>
-                        <li contenteditable="true">全程零失误保障赛事正常落地，获评优秀志愿者并获得官方认证证书。</li>
-                    </ul>
+                <div class="section-header-row">
+                    <div class="section-title">在校经历</div>
+                    <button class="btn add-item-btn" onclick="addSchoolItem()">+新增经历</button>
                 </div>
-
-                <div style="margin-bottom: 10px;">
-                    <div class="item-header-3col">
-                        <div class="col-left" contenteditable="true">社区志愿服务</div>
-                        <div class="col-center" contenteditable="true">志愿者</div>
-                        <div class="col-right" contenteditable="true">2024.01 - 2024.02</div>
+                <div id="schoolExpWrap">
+                    <div class="resume-item-wrap">
+                        <span class="del-item" onclick="delItem(this)">删除</span>
+                        <div class="item-header-3col">
+                            <div class="col-left" contenteditable="true">张家界武陵源马拉松</div>
+                            <div class="col-center" contenteditable="true">赛事志愿者</div>
+                            <div class="col-right" contenteditable="true">2024.04</div>
+                        </div>
+                        <ul class="bullets">
+                            <li contenteditable="true">对接千余名参赛选手，负责路线指引、物资分拣派发、现场秩序维护工作。</li>
+                            <li contenteditable="true">全程零失误保障赛事正常落地，获评优秀志愿者并获得官方认证证书。</li>
+                        </ul>
                     </div>
-                    <ul class="bullets">
-                        <li contenteditable="true">日均接待50+人次居民咨询，完成100余份居民档案资料规整归档。</li>
-                        <li contenteditable="true">梳理输出标准化办公会务文档，整体办公事务处理效率提升50%。</li>
-                    </ul>
-                </div>
-
-                <div>
-                    <div class="item-header-3col">
-                        <div class="col-left" contenteditable="true">朋辈心理互助会</div>
-                        <div class="col-center" contenteditable="true">干事 (文宣部)</div>
-                        <div class="col-right" contenteditable="true">2023.10 - 2024.09</div>
+                    <div class="resume-item-wrap">
+                        <span class="del-item" onclick="delItem(this)">删除</span>
+                        <div class="item-header-3col">
+                            <div class="col-left" contenteditable="true">社区志愿服务</div>
+                            <div class="col-center" contenteditable="true">志愿者</div>
+                            <div class="col-right" contenteditable="true">2024.01 - 2024.02</div>
+                        </div>
+                        <ul class="bullets">
+                            <li contenteditable="true">日均接待50+人次居民咨询，完成100余份居民档案资料规整归档。</li>
+                            <li contenteditable="true">梳理输出标准化办公会务文档，整体办公事务处理效率提升50%。</li>
+                        </ul>
                     </div>
-                    <ul class="bullets">
-                        <li contenteditable="true">独立策划落地5场校园主题活动，覆盖在校学生500余人。</li>
-                        <li contenteditable="true">累计参与5次线下志愿落地工作，获评社团年度优秀干事，锻炼统筹规划与抗压能力。</li>
-                    </ul>
+                    <div class="resume-item-wrap">
+                        <span class="del-item" onclick="delItem(this)">删除</span>
+                        <div class="item-header-3col">
+                            <div class="col-left" contenteditable="true">朋辈心理互助会</div>
+                            <div class="col-center" contenteditable="true">干事 (文宣部)</div>
+                            <div class="col-right" contenteditable="true">2023.10 - 2024.09</div>
+                        </div>
+                        <ul class="bullets">
+                            <li contenteditable="true">独立策划落地5场校园主题活动，覆盖在校学生500余人。</li>
+                            <li contenteditable="true">累计参与5次线下志愿落地工作，获评社团年度优秀干事，锻炼统筹规划与抗压能力。</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
@@ -438,6 +512,35 @@
         let posY = 0;
         let isDragging = false;
         let startX, startY;
+
+        // 删除条目
+        function delItem(el){
+            el.parentElement.remove();
+        }
+        //新增模板
+        function getItemTpl(){
+            return `
+            <div class="resume-item-wrap">
+                <span class="del-item" onclick="delItem(this)">删除</span>
+                <div class="item-header-3col">
+                    <div class="col-left" contenteditable="true">单位名称</div>
+                    <div class="col-center" contenteditable="true">岗位/身份</div>
+                    <div class="col-right" contenteditable="true">20XX.XX‑20XX.XX</div>
+                </div>
+                <ul class="bullets">
+                    <li contenteditable="true">在此填写工作内容、成果描述</li>
+                </ul>
+            </div>`;
+        }
+        function addEduItem(){
+            document.getElementById('eduWrap').insertAdjacentHTML('beforeend',getItemTpl());
+        }
+        function addProjectItem(){
+            document.getElementById('projectWrap').insertAdjacentHTML('beforeend',getItemTpl());
+        }
+        function addSchoolItem(){
+            document.getElementById('schoolExpWrap').insertAdjacentHTML('beforeend',getItemTpl());
+        }
 
         function triggerUpload() {
             fileInput.click();
@@ -488,6 +591,7 @@
             startX = e.clientX - posX;
             startY = e.clientY - posY;
             wrapper.style.cursor = 'grabbing';
+            e.preventDefault();
         });
 
         window.addEventListener('mousemove', (e) => {
@@ -502,10 +606,9 @@
             if(wrapper) wrapper.style.cursor = 'grab';
         });
 
-        // 导出 PDF 时动态隐藏虚线边框
+        //导出PDF
         function exportToPDF() {
             photoContainer.classList.add('no-border');
-            
             const element = document.getElementById('resume');
             const opt = {
                 margin:       0,
@@ -514,10 +617,29 @@
                 html2canvas:  { scale: 2, useCORS: true },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
-
             html2pdf().set(opt).from(element).save().then(() => {
                 photoContainer.classList.remove('no-border');
             });
+        }
+
+        //本地存储
+        function saveLocal(){
+            const html = document.getElementById('resume').innerHTML;
+            localStorage.setItem("resume_html",html);
+            alert("✅简历内容已保存到本地浏览器，刷新不会丢失（图片不保存）");
+        }
+        function loadLocal(){
+            const saved = localStorage.getItem("resume_html");
+            if(saved){
+                document.getElementById('resume').innerHTML = saved;
+            }
+        }
+        function clearStorage(){
+            localStorage.removeItem("resume_html");
+            alert("已清空本地缓存，刷新页面恢复原始简历");
+        }
+        window.onload = function(){
+            loadLocal();
         }
     </script>
 </body>
